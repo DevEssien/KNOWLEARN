@@ -1,7 +1,9 @@
 import dotenv from "dotenv";
 import { join } from "path";
 
-import { TConfig } from './types'
+type TConfig<T> = {
+  [key: string]: T;
+}
 
 export enum AppENV {
   DEV = "development",
