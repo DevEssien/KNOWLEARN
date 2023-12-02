@@ -1,3 +1,3 @@
-interface IConfig {
-    
+export type TConfig<T> = {
+    [key: string]: T;
 }

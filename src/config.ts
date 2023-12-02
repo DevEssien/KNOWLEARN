@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import { join } from "path";
 
+import { TConfig } from './types'
 
 export enum AppENV {
   DEV = "development",
@@ -14,11 +15,16 @@ dotenv.config({
     : join(__dirname, "..", ".env.prod"),
 });
 
-const config = {
+
+const config: TConfig<any> = {
   app: {
     port: +(process.env.PORT || 3001),
     env: process.env.APP_ENV as AppENV
+  },
+  db: {
+    uri: process.env.LOCAL_DB_URI
   }
 }
+
 
 export default config;
