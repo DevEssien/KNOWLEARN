@@ -1,30 +1,158 @@
 // Use DBML to define your database structure
 // Docs: https://dbml.dbdiagram.io/docs
 
-Table follows {
-  following_user_id integer
-  followed_user_id integer
-  created_at timestamp 
+Enum CourseLevel {
+  EASY
+  MEDIUM
+  DIFFICULT
 }
 
-Table users {
+Enum UserRole {
+  ADMIN
+  INSTRUCTOR
+  STUDENT
+}
+
+Enum QuestionType {
+  MCQ
+  BINARY
+  CONCISE
+}
+
+Enum CourseContentType {
+    DOCUMENT 
+    AUDIO 
+    VIDEO 
+}
+
+Enum OTPStatus {
+    INACTIVE
+    PENDING 
+    ACTIVE 
+    EXPIRED 
+}
+
+Table User {
   id integer [primary key]
+  first_name varchar
+  last_name varchar
   username varchar
-  role varchar
+  bio text
+  email varchar
+  password varchar
+  phoneno varchar
+  is_phone_verified boolean [default: false]
+  image_url varchar
+  image_id varchar
+  role UserRole  
+  courses_enrolled_ids integer[]  [ref: > Course.id] 
+  modules_completed_ids integer[] [ref: > Module.id] 
+  otp integer
+  otp_status OTPStatus
+  otp_expiration_date timestamp
+  reset_token varchar
+  reset_token_expiration_date timestamp
   created_at timestamp
+  updated_at timestamp
 }
 
-Table posts {
+Table Instructor {
+  id integer [primary key]
+  courses_taught_ids integer[] [ref: > Course.id] 
+  user_id integer
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table Course {
   id integer [primary key]
   title varchar
-  body text [note: 'Content of the post']
-  user_id integer
-  status varchar
+  content_type CourseContentType
+  description text [note: 'about the course']
+  level CourseLevel
+  price integer
+  enrollment_key varchar
+  start_date timestamp
+  end_date timestamp
+  duration varchar 
+  module_ids integer[]
+  students_enrolled_ids integer[] [ref: > User.id]
+  instructor_id integer 
+  category_id integer [ref: > Category.id]
   created_at timestamp
+  updated_at timestamp
 }
 
-Ref: posts.user_id > users.id // many-to-one
+Table Category {
+  id integer [primary key]
+  name varchar
+  description text
+  courses integer[] [ref: > Course.id]
+}
 
-Ref: users.id < follows.following_user_id
+Table CourseCategory {
+  course_id integer [ref: > Course.id]
+  category_id integer [ref: > Category.id]
+  primary key(course_id, category_id)
+}
 
-Ref: users.id < follows.followed_user_id
+Table Module {
+  id integer [primary key]
+  module_order_no integer [note: 'An integer to rep the order of the module within the course']
+  title varchar
+  description text [note: 'About the module']
+  content varchar
+  course_id integer
+  instructor_id integer
+  created_at timestamp
+  updated_at timestamp
+}
+
+
+Table Quiz {
+  id integer [primary key]
+  title varchar
+  description text [note: 'A brief description or intructions for the quiz']
+  time_limit integer
+  passing_score integer
+  attempts_allowed integer
+  created_by_instructor_id integer
+  course_id integer
+  module_id integer
+  created_at timestamp
+  updated_at timestamp
+}
+
+
+Table Question {
+  id integer [primary key]
+  text varchar [note: 'the actual text of the quiz to which the question belongs']
+  type QuestionType [note: 'type: multiple-choice, true/false, short-answer']
+  answer_options varchar[]  [note: 'if question type is MCQ, then answer options'] 
+  correct_answer varchar
+  answer_explanation text
+  order integer
+  quiz_id integer
+  created_at timestamp
+  updated_at timestamp
+}
+
+
+Ref: Instructor.user_id > User.id  
+
+Ref: Course.instructor_id > Instructor.id
+
+Ref: Module.course_id > Course.id
+
+Ref: Module.instructor_id > Instructor.id
+
+Ref: Quiz.course_id > Course.id
+
+Ref: Quiz.module_id > Module.id
+
+Ref: Quiz.created_by_instructor_id > Instructor.id
+
+Ref: Question.quiz_id > Quiz.id
+
+//Ref: user.id < instructor.user_id //one-to-many
+

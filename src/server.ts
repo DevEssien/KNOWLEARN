@@ -1,3 +1,11 @@
 import app from './app';
+import config from './config';
+import createMongodbConnection from './db/connection';
 
-app.listen()
+const PORT = config.app.port
+
+createMongodbConnection();
+
+app.listen(PORT, () => {
+    console.log('- App environment:: ', PORT);
+});
