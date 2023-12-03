@@ -1,4 +1,5 @@
 export enum OTPStatus {
+    INACTIVE = 'inactive',
     PENDING = 'pending',
     ACTIVE = 'active',
     EXPIRED = 'expired'
@@ -16,8 +17,13 @@ export enum UserRole {
     STUDENT = 'student'
 }
 
-export enum CourseType {
+export enum CourseContentType {
     DOCUMENT = 'document',
     AUDIO = 'audio',
     VIDEO = 'video'
 }
+export enum CourseLevel {
+    EASY = 'easy',
+    MEDIUM = 'medium',
+    DIFFICULT = 'difficult'
+  }

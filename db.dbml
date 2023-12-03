@@ -4,13 +4,32 @@
 Enum CourseLevel {
   EASY
   MEDIUM
-  DIFICULT
+  DIFFICULT
 }
 
 Enum UserRole {
   ADMIN
   INSTRUCTOR
   STUDENT
+}
+
+Enum QuestionType {
+  MCQ
+  BINARY
+  CONCISE
+}
+
+Enum CourseContentType {
+    DOCUMENT 
+    AUDIO 
+    VIDEO 
+}
+
+Enum OTPStatus {
+    INACTIVE
+    PENDING 
+    ACTIVE 
+    EXPIRED 
 }
 
 Table User {
@@ -21,14 +40,15 @@ Table User {
   bio text
   email varchar
   password varchar
-  phoneno number
+  phoneno varchar
+  is_phone_verified boolean [default: false]
   image_url varchar
   image_id varchar
   role UserRole  
   courses_enrolled_ids integer[]  [ref: > Course.id] 
   modules_completed_ids integer[] [ref: > Module.id] 
   otp integer
-  otp_status varchar
+  otp_status OTPStatus
   otp_expiration_date timestamp
   reset_token varchar
   reset_token_expiration_date timestamp
@@ -47,10 +67,8 @@ Table Instructor {
 Table Course {
   id integer [primary key]
   title varchar
-  content_type varchar
+  content_type CourseContentType
   description text [note: 'about the course']
-  instructor_id integer 
-  category_id integer [ref: > Category.id]
   level CourseLevel
   price integer
   enrollment_key varchar
@@ -59,6 +77,8 @@ Table Course {
   duration varchar 
   module_ids integer[]
   students_enrolled_ids integer[] [ref: > User.id]
+  instructor_id integer 
+  category_id integer [ref: > Category.id]
   created_at timestamp
   updated_at timestamp
 }
@@ -95,10 +115,10 @@ Table Quiz {
   description text [note: 'A brief description or intructions for the quiz']
   time_limit integer
   passing_score integer
-  course_id integer
-  module_id integer
   attempts_allowed integer
   created_by_instructor_id integer
+  course_id integer
+  module_id integer
   created_at timestamp
   updated_at timestamp
 }
@@ -107,10 +127,10 @@ Table Quiz {
 Table Question {
   id integer [primary key]
   text varchar [note: 'the actual text of the quiz to which the question belongs']
-  type varchar [note: 'type: multiple-choice, true/false, short-answer']
-  options varchar[]   
+  type QuestionType [note: 'type: multiple-choice, true/false, short-answer']
+  answer_options varchar[]  [note: 'if question type is MCQ, then answer options'] 
   correct_answer varchar
-  explanation text
+  answer_explanation text
   order integer
   quiz_id integer
   created_at timestamp

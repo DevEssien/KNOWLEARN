@@ -8,4 +8,4 @@ createMongodbConnection();
 
 app.listen(PORT, () => {
     console.log('- App environment:: ', PORT);
-})
+});
