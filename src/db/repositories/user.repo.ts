@@ -22,6 +22,10 @@ export default class UserRepo {
         return this.userModel.findById(_id);
     }
 
+    async getUserByEmail(email: string): Promise<any> {
+        return this.userModel.findOne({ email: email });
+    }
+
     async createUser( { email, password, fullName } : ICreateUser ): Promise<any> {
         const newUser = new this.userModel({ email, password, fullName});
         return newUser.save();

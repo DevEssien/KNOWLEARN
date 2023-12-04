@@ -15,10 +15,10 @@ export class CreatedUserValidator {
   @IsString({ message: 'Names must be a string with at least two names'})
   @Transform(( { value } ) => value.trim()) 
   fullName: string;
-
   constructor(email: string, password: string, fullName: string) {
     this.email = email;
     this.password = password;
     this.fullName = fullName;
   }
 }
+

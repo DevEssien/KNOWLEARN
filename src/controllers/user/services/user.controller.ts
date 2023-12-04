@@ -1,32 +1,30 @@
 // import { TServiceSuccessResponse, ResponseStatus } from '../../../types';
 import { Request } from "express";
-import UserRepo from '../../../db/repositories/user.repo';
-import UserModel from '../../../db/models/User';
 import { wrapHandler } from '../../index';
+import UserService from "./user.service";
 
-const User = new UserRepo(UserModel)
 
 
 export default class UserController {
     public static getAllUser = wrapHandler(() => {
-        return User.getAllUser();
+        return UserService.getAllUser()
     });
 
-    public static getUserById = wrapHandler((req: Request) => {
-        return User.getUserById(req.params?.userId);
-    });
+    // public static getUserById = wrapHandler((req: Request) => {
+    //     return UserService.getUserById(req.params?.userId);
+    // });
 
     public static createUser = wrapHandler((req: Request) => {
-        return User.createUser({ ...req.body});
+        return UserService.createUser({ ...req.body});
     });
 
-    public static updateUser = wrapHandler((req: Request) => {
-        return User.updateUser( {...req.params}, { ...req.body } );
-    });
+    // public static updateUser = wrapHandler((req: Request) => {
+    //     return UserService.updateUser( {...req.params}, { ...req.body } );
+    // });
 
-    public static deleteOneUser = wrapHandler((req: Request ) => {
-        return User.deleteUserById({ ...req.params });
-    })
+    // public static deleteOneUser = wrapHandler((req: Request ) => {
+    //     return UserService.deleteUserById({ ...req.params });
+    // })
 }
 
 
