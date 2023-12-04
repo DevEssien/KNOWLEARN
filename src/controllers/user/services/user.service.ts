@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { validate } from 'class-validator';
 import { CreatedUserValidator } from '../validators/index';
 import UserRepo from '../../../db/repositories/user.repo';
-import UserModel from '../../../db/models/User';
+import UserModel, { IUser } from '../../../db/models/User';
 import { IServiceActionResult } from '../../index';
 
 const User = new UserRepo(UserModel);
@@ -14,28 +14,41 @@ const userServicePartRes: IServiceActionResult = {
   data: {}
 }
 
-export class UserService {
+export default class UserService {
   public static async getAllUser() {
     const users = await User.getAllUser();
 
-    if (!users) throw new Error('No user found');
+    if (users.length  === 0) throw new Error('No user found');
 
     return  {
       ...userServicePartRes,
-      message: 'User created successfully',
-      data: users,
+      message: 'Fetched All Users successfully',
+      data: { users },
     };
   }
   
   public static async createUser(createUserDto: CreatedUserValidator ) {
-    const errors = await validate(createUserDto);
+    const { email, fullName, password } = createUserDto;
 
+    const userValidatableFields = new CreatedUserValidator(email, password, fullName);
+    const errors = await validate(userValidatableFields);
+    console.log('error ', typeof errors, errors)
     if (errors.length > 0) throw new Error('invalid input type');
+
+    // const user = await User.getUserByEmail(createUserDto?.email);
+    // if (user) throw new Error('User email already exist');
+
+    // const newUser = await User.createUser(createUserDto);
+    // if (!newUser) throw new Error('unable to create user')
 
     return  {
       ...userServicePartRes,
       message: 'User created successfully',
-      data: createUserDto,
+      data: { createdUser: [] },
     };
+  }
+
+  public static async updateUser(updateUserDto: Partial<IUser>) {
+    return updateUserDto;
   }
 }
