@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction, RequestHandler } from 'express';
 
-export interface IServerActionResult {
+export interface IServiceActionResult {
   status: string;
   statusCode: number;
   message: string;
   data?: any;
 }
 
-type HandlerFn = (( req: Request ) => Promise<IServerActionResult>) | (() => Promise<IServerActionResult>)
+type HandlerFn = (( req: Request ) => Promise<IServiceActionResult>) | (() => Promise<IServiceActionResult>)
 
 export  function wrapHandler(handler: HandlerFn): RequestHandler {
   return async function(req: Request, res: Response, next: NextFunction ) {
