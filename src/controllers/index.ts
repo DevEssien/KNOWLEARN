@@ -5,7 +5,6 @@ export interface IServiceActionResult {
   statusCode: number;
   message: string;
   data?: any;
-  errors?: any;
 }
 
 type HandlerFn = (( req: Request ) => Promise<IServiceActionResult>) | (() => Promise<IServiceActionResult>)
@@ -13,14 +12,13 @@ type HandlerFn = (( req: Request ) => Promise<IServiceActionResult>) | (() => Pr
 export  function wrapHandler(handler: HandlerFn): RequestHandler {
   return async function(req: Request, res: Response, next: NextFunction ) {
     try {
-      const { data  = null, errors = null, status = 'success', statusCode = 200, message = 'The request was successful' } = await handler(req);
+      const { data  = null, statusCode = 200, message = 'The request was successful' } = await handler(req);
 
       return res.status(200).json({
-        status,
+        status: 'success',
         statusCode,
         message,
-        data,
-        errors
+        data
       });
     } catch (error) {
       return next(error)

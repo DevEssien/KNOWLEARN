@@ -19,7 +19,9 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.2",
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "^0.1.13",
+    "winston": "^3.11.0",
+    "winston-console-format": "^1.0.8"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
