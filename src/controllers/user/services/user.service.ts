@@ -33,8 +33,8 @@ export default class UserService {
 
     const userValidatableFields = new CreatedUserValidator(email, password, fullName);
     const errors = await validate(userValidatableFields, { validationError: { target: false }});
-    
-    if (errors.length > 0) return new ValidationException('invalid input types', errors);
+
+    if (errors.length > 0) throw new ValidationException('invalid input types');
 
     const user = await User.getUserByEmail(createUserDto?.email);
     if (user) throw new Error('User email already exist');

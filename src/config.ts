@@ -9,6 +9,7 @@ export enum AppENV {
   DEV = "development",
   PROD = "production",
   TEST = "test",
+  LOCAL = 'local'
 }
 
 dotenv.config({
