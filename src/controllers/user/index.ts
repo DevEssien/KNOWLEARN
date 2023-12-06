@@ -1,8 +1,6 @@
-// import { TServiceSuccessResponse, ResponseStatus } from '../../../types';
 import { Request } from "express";
-import { wrapHandler } from '../../index';
-import UserService from "./user.service";
-
+import { wrapHandler } from '../../utils/serviceWrapper';
+import UserService from "./services/user.service";
 
 
 export default class UserController {
@@ -10,9 +8,9 @@ export default class UserController {
         return UserService.getAllUser()
     });
 
-    // public static getUserById = wrapHandler((req: Request) => {
-    //     return UserService.getUserById(req.params?.userId);
-    // });
+    public static getUserById = wrapHandler((req: Request) => {
+        return UserService.getUserById({ _id: req.params?.userId});
+    });
 
     public static createUser = wrapHandler((req: Request) => {
         return UserService.createUser({ ...req.body});

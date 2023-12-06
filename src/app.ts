@@ -10,6 +10,7 @@ const {
   Helmet,
   NotFoundHandler,
   RateLimiting,
+  // routeLogger
 } = GeneralMiddleware;
 
 const app = express();
@@ -23,12 +24,9 @@ app.use(RateLimiting);
 app.use(Helmet)
 app.use(CORS)
 app.use(DevLogs)
+// app.use(routeLogger);
 
 app.use(router);
-
-// const appRouterStackLayer = app._router.stack.filter((layer: any) => layer.name === 'router');
-// const routes = appRouterStackLayer[0].handle.stack;
-// console.log(routes);
 
 app.use(NotFoundHandler);
 app.use(ErrorHandler);

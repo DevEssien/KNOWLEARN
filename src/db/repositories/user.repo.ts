@@ -1,4 +1,4 @@
-import { Model, FilterQuery } from 'mongoose';
+import { Model, FilterQuery,  } from 'mongoose';
 import { IUser } from '../models/User';
 
 export interface ICreateUser {
@@ -18,7 +18,7 @@ export default class UserRepo {
         this.userModel = userModel;
     }
 
-    async getUserById(_id: String ): Promise<any> {
+    async getUserById(_id: string): Promise<any> {
         return this.userModel.findById(_id);
     }
 
