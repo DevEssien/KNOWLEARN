@@ -1,4 +1,4 @@
-import { createLogger, format, transport, transports } from "winston";
+import { createLogger, format, transports } from "winston";
 import { AppENV } from "../../config";
 import { consoleFormat } from "winston-console-format";
 
