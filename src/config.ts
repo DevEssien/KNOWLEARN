@@ -1,8 +1,14 @@
 import dotenv from "dotenv";
 import { join } from "path";
 
-type TConfig<T> = {
-  [key: string]: T;
+type TConfig = {
+  app: {
+    port: number,
+    env: string
+  };
+  db: {
+    uri: string
+  };
 }
 
 export enum AppENV {
@@ -19,15 +25,14 @@ dotenv.config({
 });
 
 
-const config: TConfig<any> = {
+const config: TConfig = {
   app: {
     port: +(process.env.PORT || 3001),
     env: process.env.APP_ENV as AppENV
   },
   db: {
-    uri: process.env.LOCAL_DB_URI
+    uri: process.env.LOCAL_DB_URI!
   }
 }
-
 
 export default config;

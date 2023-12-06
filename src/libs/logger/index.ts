@@ -38,7 +38,8 @@ const createComponentLogger = (component: string) => createLogger({
     transports: [ new transports.Console(consoleTransportOptions)]
 });
 
-export const serverLogger = createComponentLogger('SERVER');
-export const routeLogger = createComponentLogger('ROUTES');
-export const errorLoggr = createComponentLogger('ERROR');
-export const scriptLogger = createComponentLogger('SCRIPT');
+export const logger = createComponentLogger('GENERAL MIDDLEWARE')
+// export const serverLogger = createComponentLogger('SERVER');
+// export const routeLogger = createComponentLogger('ROUTES');
+// export const errorLoggr = createComponentLogger('ERROR');
+// export const scriptLogger = createComponentLogger('SCRIPT');
