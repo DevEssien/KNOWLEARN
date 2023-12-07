@@ -12,17 +12,23 @@ export default class UserController {
         return UserService.getUserById({ _id: req.params?.userId});
     });
 
+    public static getUserByEmail = wrapHandler((req: Request) => {
+        return UserService.getUserByEmail(req.body?.email);
+    });
+    
     public static createUser = wrapHandler((req: Request) => {
         return UserService.createUser({ ...req.body});
     });
 
-    // public static updateUser = wrapHandler((req: Request) => {
-    //     return UserService.updateUser( {...req.params}, { ...req.body } );
-    // });
+    public static updateUser = wrapHandler((req: Request) => {
+        const _id = req.params?.userId
+        return UserService.updateUser( { _id }, { ...req.body } );
+    });
 
-    // public static deleteOneUser = wrapHandler((req: Request ) => {
-    //     return UserService.deleteUserById({ ...req.params });
-    // })
+    public static deleteOneUser = wrapHandler((req: Request ) => {
+        const _id = req.params?.userId;
+        return UserService.deleteUserById({ _id });
+    })
 }
 
 

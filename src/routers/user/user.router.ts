@@ -3,7 +3,7 @@ import  UserController  from '../../controllers/user/index'
 
 const router = Router();
 
-const { createUser, getAllUser, getUserById } = UserController;
+const { createUser, getAllUser, getUserById, updateUser, deleteOneUser } = UserController;
 
 router.route('/')
 .get( getAllUser )
@@ -11,7 +11,7 @@ router.route('/')
 
 router.route('/:userId')
 .get( getUserById )
-// .put( updateUser )
-// .delete( deleteOneUser )
+.put( updateUser )
+.delete( deleteOneUser )
 
 export default router;
