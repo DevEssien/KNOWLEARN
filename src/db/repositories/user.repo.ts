@@ -26,11 +26,11 @@ export default class UserRepo {
     }
 
     async getUserByEmail(email: string): Promise<any> {
-        return this.userModel.findOne({ email: email });
+        return this.userModel.findOne({ email });
     }
 
     async createUser( { email, password, fullName } : ICreateUser ): Promise<any> {
-        const newUser = new this.userModel({ email, password, fullName});
+        const newUser = new this.userModel({ email, password, fullName });
         return newUser.save();
     }
 

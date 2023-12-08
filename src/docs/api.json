@@ -1,0 +1,149 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Knowlearn-API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000",
+      "description": "Local Developement Server"
+    }
+  ],
+  
+
+  
+  "paths": {
+    "/api/v1/users": {
+      "get": {
+        "summary": "Get all users",
+        "description": "",
+        "tags": [
+          "List"
+        ],
+    
+
+
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "type": "number"
+                    },
+                    "users": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "_id": {
+                            "type": "string"
+                          },
+                          "first_name": {
+                            "type": "string"
+                          },
+                          "last_name": {
+                            "type": "string"
+                          },
+                          "email": {
+                            "type": "string"
+                          },
+                          "password": {
+                            "type": "string"
+                          },
+                          "is_phone_verified": {
+                            "type": "boolean"
+                          },
+                          "role": {
+                            "type": "string"
+                          },
+                          "courses_enrolled_ids": {
+                            "type": "array"
+                          },
+                          "modules_completed_ids": {
+                            "type": "array"
+                          },
+                          "otp_status": {
+                            "type": "string"
+                          },
+                          "createdAt": {
+                            "type": "string"
+                          },
+                          "updatedAt": {
+                            "type": "string"
+                          },
+                          "__v": { 
+                            "type": "number"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "status": "success",
+                  "timestamp": 1700352363267,
+                  "users": {
+                    "_id": "65707dfa90780d25725513ae",
+                    "first_name": "Essien",
+                    "last_name": "Emmanuel",
+                    "email": "essienemma300@gmail.com",
+                    "password": "111111",
+                    "is_phone_verified": false,
+                    "role": "student",
+                    "courses_enrolled_ids": [],
+                    "modules_completed_ids": [],
+                    "otp_status": "inactive",
+                    "createdAt": "2023-12-06T13:58:18.669+00:00",
+                    "updatedAt": "2023-12-06T13:58:18.669+00:00",
+                    "__v": 0
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "number": "number"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "type": "NotFoundException",
+                  "items": [
+                    "Users could not be empty"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

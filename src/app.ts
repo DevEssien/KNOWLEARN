@@ -1,6 +1,7 @@
 import express from "express";
 import { json, urlencoded } from "body-parser";
-import router from "./routers/user/index";
+import userRouter from "./routers/user/index";
+import apiDocRouter from './routers/docs/index';
 import GeneralMiddleware from "./middleware/general";
 
 const {
@@ -26,7 +27,8 @@ app.use(CORS)
 app.use(DevLogs)
 // app.use(routeLogger);
 
-app.use(router);
+app.use('/api/v1', userRouter);
+app.use(apiDocRouter);
 
 app.use(NotFoundHandler);
 app.use(ErrorHandler);
