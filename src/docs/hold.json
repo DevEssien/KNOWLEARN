@@ -1,0 +1,21 @@
+{
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": {
+    "BearerAuth": []
+  },
+  "parameters": {
+    "in": "header",
+    "name": "authorization",
+    "schema": {
+      "type": "string"
+    }
+  }
+}

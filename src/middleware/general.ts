@@ -42,19 +42,19 @@ export default class GeneralMiddleware {
     });
   }
 
-  static NotFoundHandler(_req:Request, res: Response, _next: NextFunction) {
+  static NotFoundHandler(req:Request, res: Response, _next: NextFunction) {
     return res.status(404).json({
       status: 'error',
       statusCode: 404,
       type: 'NotFoundError',
       timestamp: Date.now(),
-      message: 'endpoint not found'
+      message: `${req.url} endpoint not found`
     });
   }
 
   static routeLogger(req: Request, _res: Response, next: NextFunction) {
     logger.info(`:: ${new Date()} --> ${req.method} ${req.baseUrl} ${req.url}`);
-    next();
+    return next();
   }
 
   static setIPxUserAgent(req: Request, res: Response, next: NextFunction) {
@@ -69,7 +69,7 @@ export default class GeneralMiddleware {
 
   static DevLogs(req: Request, _res: Response, next: NextFunction) {
     console.log(`- requesting ${req.method} - ${req.url}`);
-    console.log(`- requesting data =  ${JSON.stringify({ body: req.body, query: req.query }, null , 2)}`);
+    console.log(`- requesting data =  ${JSON.stringify({ body: req.body, params: req.params, query: req.query }, null , 2)}`);
     return next();
   }
 

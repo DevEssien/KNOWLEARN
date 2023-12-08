@@ -1,8 +1,6 @@
-// import { TServiceSuccessResponse, ResponseStatus } from '../../../types';
 import { Request } from "express";
-import { wrapHandler } from '../../index';
-import UserService from "./user.service";
-
+import { wrapHandler } from '../../utils/serviceWrapper';
+import UserService from "./services/user.service";
 
 
 export default class UserController {
@@ -10,21 +8,27 @@ export default class UserController {
         return UserService.getAllUser()
     });
 
-    // public static getUserById = wrapHandler((req: Request) => {
-    //     return UserService.getUserById(req.params?.userId);
-    // });
+    public static getUserById = wrapHandler((req: Request) => {
+        return UserService.getUserById({ _id: req.params?.userId});
+    });
 
+    public static getUserByEmail = wrapHandler((req: Request) => {
+        return UserService.getUserByEmail(req.body?.email);
+    });
+    
     public static createUser = wrapHandler((req: Request) => {
         return UserService.createUser({ ...req.body});
     });
 
-    // public static updateUser = wrapHandler((req: Request) => {
-    //     return UserService.updateUser( {...req.params}, { ...req.body } );
-    // });
+    public static updateUser = wrapHandler((req: Request) => {
+        const _id = req.params?.userId
+        return UserService.updateUser( { _id }, { ...req.body } );
+    });
 
-    // public static deleteOneUser = wrapHandler((req: Request ) => {
-    //     return UserService.deleteUserById({ ...req.params });
-    // })
+    public static deleteOneUser = wrapHandler((req: Request ) => {
+        const _id = req.params?.userId;
+        return UserService.deleteUserById({ _id });
+    })
 }
 
 

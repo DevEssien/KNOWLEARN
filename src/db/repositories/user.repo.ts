@@ -1,5 +1,7 @@
-import { Model, FilterQuery } from 'mongoose';
+import { Model, FilterQuery, isValidObjectId } from 'mongoose';
 import { IUser } from '../models/User';
+import { ServiceException } from '../../libs/exceptions';
+import { ErrorMessages } from '../../libs/exceptions/messages';
 
 export interface ICreateUser {
     email: string;
@@ -18,16 +20,17 @@ export default class UserRepo {
         this.userModel = userModel;
     }
 
-    async getUserById(_id: String ): Promise<any> {
+    async getUserById(_id: string): Promise<any> {
+        if (!isValidObjectId(_id)) throw new ServiceException(ErrorMessages.INVALID_OBJECT_ID);
         return this.userModel.findById(_id);
     }
 
     async getUserByEmail(email: string): Promise<any> {
-        return this.userModel.findOne({ email: email });
+        return this.userModel.findOne({ email });
     }
 
     async createUser( { email, password, fullName } : ICreateUser ): Promise<any> {
-        const newUser = new this.userModel({ email, password, fullName});
+        const newUser = new this.userModel({ email, password, fullName });
         return newUser.save();
     }
 

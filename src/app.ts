@@ -1,6 +1,7 @@
 import express from "express";
 import { json, urlencoded } from "body-parser";
-import router from "./routers/user/index";
+import userRouter from "./routers/user/index";
+import apiDocRouter from './routers/docs/index';
 import GeneralMiddleware from "./middleware/general";
 
 const {
@@ -10,6 +11,7 @@ const {
   Helmet,
   NotFoundHandler,
   RateLimiting,
+  // routeLogger
 } = GeneralMiddleware;
 
 const app = express();
@@ -23,12 +25,10 @@ app.use(RateLimiting);
 app.use(Helmet)
 app.use(CORS)
 app.use(DevLogs)
+// app.use(routeLogger);
 
-app.use(router);
-
-// const appRouterStackLayer = app._router.stack.filter((layer: any) => layer.name === 'router');
-// const routes = appRouterStackLayer[0].handle.stack;
-// console.log(routes);
+app.use('/api/v1', userRouter);
+app.use(apiDocRouter);
 
 app.use(NotFoundHandler);
 app.use(ErrorHandler);

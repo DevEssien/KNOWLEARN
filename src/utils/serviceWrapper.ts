@@ -21,7 +21,7 @@ export  function wrapHandler(handler: HandlerFn): RequestHandler {
         data
       });
     } catch (error) {
-      return next(error)
+      return next(error);
     }
   }
 }

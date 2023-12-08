@@ -31,7 +31,7 @@ export class ResourceConflictException extends APIError {
 
 export class ValidationException extends APIError {
   errors: Array<object>;
-  constructor(message: string,  errors: Array<object> = []) {
+  constructor(message: string = 'Invalid Input!',  errors: Array<object> = []) {
     super(message, 422);
     this.errors = errors
   }
