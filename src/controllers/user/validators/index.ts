@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { IsString, IsEmail, MinLength, IsAlphanumeric } from 'class-validator';
+import { IsString, IsEmail, MinLength, IsStrongPassword } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class GenericValidator {
@@ -8,7 +8,7 @@ export class GenericValidator {
   @IsEmail({}, { message: 'Invalid email address'}) 
   email: string;
 
-  @IsAlphanumeric()
+  @IsStrongPassword()
   @MinLength(6, { message: 'Password must be a mininum length of 6'})
   password?: string;
 

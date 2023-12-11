@@ -30,7 +30,7 @@ export default class UserRepo {
     }
 
     async createUser( { email, password, fullName } : ICreateUser ): Promise<any> {
-        const newUser = new this.userModel({ email, password, fullName });
+        const newUser = new this.userModel({ email, password, fullName })
         return newUser.save();
     }
 

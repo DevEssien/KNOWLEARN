@@ -77,6 +77,7 @@ export default class UserService {
 
     return  {
       ...userServicePartResponse,
+      statusCode: 201,
       message: 'User created successfully',
       data: { createdUser: newUser },
     };
