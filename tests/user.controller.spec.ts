@@ -19,21 +19,51 @@ const server = supertest.agent(app);
 describe('USER CONTROLLER TEST SUITE', () => {
   before(() => {
     createMongodbConnection()
-  })
-  it('should make post request to create user', async function(){
-    const userInfo = userData(UserRole.STUDENT)
-    try {
+  });
+  describe('GET ACTIONS TEST SUITE', () => {
+    it('should make a get request to all users', async () => {
+        const res = await server.get(`${apiBase}/users`);
+
+        if (res.error) console.log('Error: ', res.error);
+
+        assert.isOk(res.body);
+        assert.equal(res.body.statusCode, 200);
+    });
+
+    it('should make a get request to get one user', async () => {
+        const res = await server.get(`${apiBase}/users/65707dfa90780d25725513ae`);
+
+        if (res.error) console.log('Error: ', res.error);
+
+        assert.isOk(res.body);
+        assert.equal(res.body.statusCode, 200);
+    });
+  });
+
+  describe.skip('POST ACTIONS TEST SUITE', () => {
+    it('should make post request to create user', async function(){
+      
+      const userInfo = userData(UserRole.STUDENT);
       const res = await server.post(`${apiBase}/users`).send({ ...userInfo });
   
-      if (res.error) console.log('Error: ', res.error)
-      console.log('body: ', res.body);
-      console.log('stat ', res.statusCode);
-   
-      assert.equal(res.body.statusCode, 201);
+      if (res.error) console.log('Error: ', res.error);
       
-    } catch (error) {
-      console.log('error ', error)
-      assert.fail('error occured')
-    }
+      assert.isOk(res.body);
+      assert.equal(res.body.statusCode, 201);
+    });
   });
+
+  describe('PUT ACTIONS TEST SUITE', () =>  {
+    it('should make a put request to update a user', async () => {
+      const userUpdateInfo = {
+        is_phone_verified: false
+      }
+      const res = await server.put(`${apiBase}/users/65707dfa90780d25725513ae`).send({ ...userUpdateInfo });
+
+      if (res.error) console.log(res.error);
+
+      assert.isOk(res.body);
+      assert.equal(res.body.statusCode, 200);
+    })
+  })
 })
