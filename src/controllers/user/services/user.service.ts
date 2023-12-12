@@ -3,27 +3,18 @@ import { validate } from 'class-validator';
 import { CreatedUserValidator, IDValidator, GenericValidator } from '../validators/index';
 import UserRepo, {ICreateUser} from '../../../db/repositories/user.repo';
 import UserModel, { IUser} from '../../../db/models/User';
-import { IServiceActionResult } from '../../../utils/serviceWrapper';
 import { NotFoundException, ValidationException, ResourceConflictException, InternalServerException } from '../../../libs/exceptions/index';
 import { ErrorMessages } from '../../../libs/exceptions/messages';
 
-const User = new UserRepo(UserModel);
+export const User = new UserRepo(UserModel);
 
-const userServicePartResponse: IServiceActionResult = {
-  status: 'success',
-  statusCode: 200,
-  message: '',
-  data: {}
-}
-
-export default class UserService {
+export default class  UserService {
   public static async getAllUser() {
     const users = await User.getAllUser();
 
     if (users.length  === 0) throw new NotFoundException(ErrorMessages.NO_FOUND_USER);
 
     return  {
-      ...userServicePartResponse,
       message: 'Fetched All Users successfully',
       data: { users },
     };
@@ -39,32 +30,27 @@ export default class UserService {
     if (!user) throw new NotFoundException(ErrorMessages.NO_FOUND_USER);
   
     return {
-      ...userServicePartResponse,
       message: 'Fetched user with id successfully',
       data: { user }
     }
   }
 
-  public static async getUserByEmail(emailDto: GenericValidator) {
+  public static async getUserByEmail(emailDto: GenericValidator): Promise<IUser> {
     const emailValidatorField = new GenericValidator(emailDto.email);
     const errors = await validate(emailValidatorField);
-
+    
     if (errors.length > 0) throw new ValidationException(ErrorMessages.INVALID_EMAIL, errors);
 
     const user = await User.getUserByEmail(emailValidatorField.email);
     if (!user) throw new NotFoundException(ErrorMessages.NO_FOUND_USER);
 
-    return {
-      ...userServicePartResponse,
-      message: 'Fetched user with email successfully',
-      data: { user }
-    }
+    return user;
   }
   
   public static async createUser(createUserDto: CreatedUserValidator ) {
-    const { email, fullName, password } = createUserDto;
-
-    const userValidatableFields = new CreatedUserValidator(email, <string>password, fullName);
+    const { email, fullName, password, role } = createUserDto;
+    
+    const userValidatableFields = new CreatedUserValidator(email, <string>password, fullName, role);
     const errors = await validate(userValidatableFields, { validationError: { target: false }});
 
     if (errors.length > 0) throw new ValidationException(ErrorMessages.INVALID_INPUT, errors);
@@ -72,15 +58,10 @@ export default class UserService {
     const user = await User.getUserByEmail(createUserDto?.email);
     if (user) throw new ResourceConflictException(ErrorMessages.EMAIL_EXIST);
 
-    const newUser = await User.createUser(<ICreateUser>createUserDto);
+    const newUser = User.createUser(<ICreateUser>createUserDto);
     if (!newUser) throw new InternalServerException('Unable To Create User!');
 
-    return  {
-      ...userServicePartResponse,
-      statusCode: 201,
-      message: 'User created successfully',
-      data: { createdUser: newUser },
-    };
+    return newUser;
   }
 
   public static async updateUser(filter: IDValidator, updateUserDto: Partial<IUser>) {
@@ -95,7 +76,6 @@ export default class UserService {
     if (updatedUser.modifiedCount !== 1) throw new NotFoundException(`Expected 1 document to be modified, but found ${updatedUser.modifiedCount}`);
 
     return {
-      ...userServicePartResponse,
       message: 'Updated User Successfully',
       data: {...updatedUser, updatedUser: await User.getUserById(filter._id) }
     }
@@ -114,7 +94,6 @@ export default class UserService {
     if (deletedUser?.deletedCount === 0) throw new NotFoundException('User with ID Already Deleted')
 
     return {
-      ...userServicePartResponse,
       message: 'Deleted User Successfully',
       data: { ...deletedUser, removedId: filter._id }
     }

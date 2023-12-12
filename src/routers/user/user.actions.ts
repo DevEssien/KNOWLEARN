@@ -3,11 +3,11 @@ import  UserController  from '../../controllers/user/index'
 
 const router = Router();
 
-const { createUser, getAllUser, getUserById, updateUser, deleteOneUser } = UserController;
+const { getAllUser, getUserById, updateUser, deleteOneUser } = UserController;
 
 router.route('/')
 .get( getAllUser )
-.post( createUser )
+// .post( createUser )
 
 router.route('/:userId')
 .get( getUserById )

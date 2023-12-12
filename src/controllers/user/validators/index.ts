@@ -1,6 +1,7 @@
 import 'reflect-metadata';
-import { IsString, IsEmail, MinLength, IsStrongPassword } from 'class-validator';
+import { IsString, IsEmail, MinLength, IsEnum } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { UserRole } from '../../../db/enums/index';
 
 export class GenericValidator {
   @IsString({ message: 'Email address must be a string'})
@@ -8,7 +9,8 @@ export class GenericValidator {
   @IsEmail({}, { message: 'Invalid email address'}) 
   email: string;
 
-  @IsStrongPassword()
+  // @IsStrongPassword()
+  @IsString()
   @MinLength(6, { message: 'Password must be a mininum length of 6'})
   password?: string;
 
@@ -30,12 +32,16 @@ export class IDValidator {
 
 export class CreatedUserValidator extends GenericValidator {
   @IsString({ message: 'Names must be a string with at least two names'})
-  @Transform(( { value } ) => value.trim()) 
+  @Transform(( { value } ) => value.trim())
   fullName: string;
 
-  constructor(email: string, password: string, fullName: string) {
+  @IsEnum(UserRole)
+  role: string;
+
+  constructor(email: string, password: string, fullName: string, role: string) {
     super(email, password)
     this.fullName = fullName;
+    this.role = role
   }
 }
 
