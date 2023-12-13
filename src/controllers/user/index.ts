@@ -2,6 +2,7 @@ import { Request } from "express";
 import { wrapHandler } from '../../utils/serviceWrapper';
 import UserService from "./services/user.service";
 import UserSignup from '../auth/services/signup';
+import UserLogin from '../auth/services/login';
 
 
 export default class UserController {
@@ -13,14 +14,12 @@ export default class UserController {
         return UserService.getUserById({ _id: req.params?.userId});
     });
 
-    // public static getUserByEmail = wrapHandler((req: Request) => {
-    //     return UserService.getUserByEmail(req.body?.email);
-    // });
+    public static loginUser = wrapHandler((req: Request) => {
+        return UserLogin({ ...req.body });
+    });
     
     public static createUser = wrapHandler((req: Request) => {
-        const signup = UserSignup({ ...req.body});
-        console.log('signup ', signup)
-        return signup;    
+        return UserSignup({ ...req.body});
     });
  
     public static updateUser = wrapHandler((req: Request) => {
@@ -33,24 +32,3 @@ export default class UserController {
         return UserService.deleteUserById({ _id });
     })
 }
-
-
-
-
-// export const createUser: RequestHandler = async (req, res, next): Promise<any> => {
-//     try {
-//         const { email, password } = req.body;
-        
-//         const user = await User.createUser(email, password);
-//         if (!user) throw new Error('Unable  to create user'); 
-
-//         const resData: TServiceSuccessResponse = {
-//             status: ResponseStatus.SUCCESS,
-//             message: 'created a user',
-//             data: { user: user } 
-//         }
-//         return res.status(201).json(resData);
-//     } catch (error) {
-//         next(error);
-//     }
-// }
