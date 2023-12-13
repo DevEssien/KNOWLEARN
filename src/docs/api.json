@@ -10,19 +10,13 @@
       "description": "Local Developement Server"
     }
   ],
-  
 
-  
   "paths": {
     "/api/v1/users": {
       "get": {
         "summary": "Get all users",
         "description": "",
-        "tags": [
-          "List"
-        ],
-    
-
+        "tags": ["List"],
 
         "responses": {
           "200": {
@@ -79,7 +73,7 @@
                           "updatedAt": {
                             "type": "string"
                           },
-                          "__v": { 
+                          "__v": {
                             "type": "number"
                           }
                         }
@@ -135,9 +129,7 @@
                 },
                 "example": {
                   "type": "NotFoundException",
-                  "items": [
-                    "Users could not be empty"
-                  ]
+                  "items": ["Users could not be empty"]
                 }
               }
             }
@@ -146,16 +138,13 @@
       }
     },
 
-
     "/api/v1/users/auth/signup": {
       "post": {
         "summary": "Create a User",
         "description": "",
-        "tags": [
-          "List"
-        ],
+        "tags": ["List"],
 
-        "requestBody":{
+        "requestBody": {
           "content": {
             "application/json": {
               "schema": {
@@ -167,7 +156,7 @@
                   "password": {
                     "type": "string"
                   },
-                  "fullName":{
+                  "fullName": {
                     "type": "string"
                   },
                   "role": {
@@ -206,52 +195,52 @@
                       },
                       "properties": {
                         "createdUser": {
+                          "type": "object",
+                          "items": {
                             "type": "object",
-                            "items": {
-                              "type": "object",
-                              "properties": {
-                                "first_name": {
-                                  "type": "string"
-                                },
-                                "last_name": {
-                                  "type": "string"
-                                },
-                                "email": {
-                                  "type": "string"
-                                },
-                                "password": {
-                                  "type": "string"
-                                },
-                                "is_phone_verified": {
-                                  "type": "boolean"
-                                },
-                                "role": {
-                                  "type": "string"
-                                },
-                                "courses_enrolled_ids": {
-                                  "type": "array"
-                                },
-                                "modules_completed_ids": {
-                                  "type": "array"
-                                },
-                                "otp_status": {
-                                  "type": "string"
-                                },
-                                "_id": {
-                                  "type": "string"
-                                },
-                                "createdAt": {
-                                  "type": "string"
-                                },
-                                "updatedAt": {
-                                  "type": "string"
-                                },
-                                "__v": {
-                                  "type": "number"
-                                }
+                            "properties": {
+                              "first_name": {
+                                "type": "string"
+                              },
+                              "last_name": {
+                                "type": "string"
+                              },
+                              "email": {
+                                "type": "string"
+                              },
+                              "password": {
+                                "type": "string"
+                              },
+                              "is_phone_verified": {
+                                "type": "boolean"
+                              },
+                              "role": {
+                                "type": "string"
+                              },
+                              "courses_enrolled_ids": {
+                                "type": "array"
+                              },
+                              "modules_completed_ids": {
+                                "type": "array"
+                              },
+                              "otp_status": {
+                                "type": "string"
+                              },
+                              "_id": {
+                                "type": "string"
+                              },
+                              "createdAt": {
+                                "type": "string"
+                              },
+                              "updatedAt": {
+                                "type": "string"
+                              },
+                              "__v": {
+                                "type": "number"
                               }
                             }
-                          },
+                          }
+                        },
                         "token": {
                           "type": "object",
                           "properties": {
@@ -266,6 +255,300 @@
                       }
                     }
                   }
+                },
+                "example": {
+                  "status": "success",
+                  "statusCode": 201,
+                  "message": "User created successfully",
+                  "data": {
+                    "createdUser": {
+                      "first_name": "Jody",
+                      "last_name": "Hardy",
+                      "email": "jody46@hotmail.com",
+                      "password": "hidden",
+                      "is_phone_verified": false,
+                      "role": "student",
+                      "courses_enrolled_ids": [],
+                      "modules_completed_ids": [],
+                      "otp_status": "inactive",
+                      "_id": "6579d5f3286f77489340fc14",
+                      "createdAt": "2023-12-13T16:04:03.210Z",
+                      "updatedAt": "2023-12-13T16:04:03.210Z",
+                      "__v": 0
+                    }
+                  },
+                  "token": {
+                    "flag": "auth",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTc5ZDVmMzI4NmY3NzQ4OTM0MGZjMTQiLCJmbGFnIjoiYXV0aCIsInRpbWVzdGFtcCI6MTcwMjQ4MzQ0MzIxNiwiaWF0IjoxNzAyNDgzNDQzLCJleHAiOjE3MDUwNzU0NDN9.CHLHOfw0MUEU59FHpBRwMxU7z1wPze4fTi3VJ8gEB_c"
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "number": "number"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "type": "ResourceConflictException",
+                  "items": ["Users Already Exist"]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "number": "number"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "type": "ValidationException",
+                  "items": ["Invalid Inputs"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/auth/login": {
+      "post": {
+        "summary": "Log in to get User Info and session token",
+        "description": "",
+        "tags": [
+          "List"
+        ],
+
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example":{
+                "email": "Jody46@hotmail.com",
+                "password": "thie2342m;q#0434;5-"
+              }
+            }
+          }
+        },
+
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "type": "number"
+                    },
+                    "data": {
+                      "type": "object",
+                      "items": {
+                        "type": "object"
+                      },
+                      "properties": {
+                        "createdUser": {
+                          "type": "object",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "first_name": {
+                                "type": "string"
+                              },
+                              "last_name": {
+                                "type": "string"
+                              },
+                              "email": {
+                                "type": "string"
+                              },
+                              "password": {
+                                "type": "string"
+                              },
+                              "is_phone_verified": {
+                                "type": "boolean"
+                              },
+                              "role": {
+                                "type": "string"
+                              },
+                              "courses_enrolled_ids": {
+                                "type": "array"
+                              },
+                              "modules_completed_ids": {
+                                "type": "array"
+                              },
+                              "otp_status": {
+                                "type": "string"
+                              },
+                              "_id": {
+                                "type": "string"
+                              },
+                              "createdAt": {
+                                "type": "string"
+                              },
+                              "updatedAt": {
+                                "type": "string"
+                              },
+                              "__v": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        },
+                        "token": {
+                          "type": "object",
+                          "properties": {
+                            "flag": {
+                              "type": "string"
+                            },
+                            "value": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "status": "success",
+                  "statusCode": 201,
+                  "message": "User created successfully",
+                  "data": {
+                    "createdUser": {
+                      "first_name": "Jody",
+                      "last_name": "Hardy",
+                      "email": "jody46@hotmail.com",
+                      "password": "hidden",
+                      "is_phone_verified": false,
+                      "role": "student",
+                      "courses_enrolled_ids": [],
+                      "modules_completed_ids": [],
+                      "otp_status": "inactive",
+                      "_id": "6579d5f3286f77489340fc14",
+                      "createdAt": "2023-12-13T16:04:03.210Z",
+                      "updatedAt": "2023-12-13T16:04:03.210Z",
+                      "__v": 0
+                    }
+                  },
+                  "token": {
+                    "flag": "auth",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTc5ZDVmMzI4NmY3NzQ4OTM0MGZjMTQiLCJmbGFnIjoiYXV0aCIsInRpbWVzdGFtcCI6MTcwMjQ4MzQ0MzIxNiwiaWF0IjoxNzAyNDgzNDQzLCJleHAiOjE3MDUwNzU0NDN9.CHLHOfw0MUEU59FHpBRwMxU7z1wPze4fTi3VJ8gEB_c"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "number": "number"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "type": "NotFoundException",
+                  "items": ["Users could not be empty"]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "number": "number"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "type": "ValidationException",
+                  "items": ["Invalid Inputs"]
                 }
               }
             }
