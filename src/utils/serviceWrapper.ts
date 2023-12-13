@@ -17,7 +17,6 @@ export  function wrapHandler(handler: HandlerFn): RequestHandler {
   return async function(req: Request, res: Response, next: NextFunction ) {
     try {
       const { token = null, data  = null, statusCode = 200, message = 'The request was successful' } = await handler(req);
-      console.log('service wrapper entered')
 
       return res.status(200).json({
         status: 'success',

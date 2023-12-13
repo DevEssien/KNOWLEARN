@@ -20,9 +20,9 @@ export default class UserController {
     public static createUser = wrapHandler((req: Request) => {
         const signup = UserSignup({ ...req.body});
         console.log('signup ', signup)
-        return signup;
+        return signup;    
     });
-
+ 
     public static updateUser = wrapHandler((req: Request) => {
         const _id = req.params?.userId
         return UserService.updateUser( { _id }, { ...req.body } );

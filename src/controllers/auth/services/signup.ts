@@ -4,7 +4,7 @@ import { ResourceConflictException, ServiceException } from  '../../../libs/exce
 import { ErrorMessages } from  '../../../libs/exceptions/messages';
 import { bcryptHash, generateJWT } from '../../../utils/index';
 import { TokenFlag } from '../../../dto/app';
-// import { IServiceActionResult } from '../../../utils/serviceWrapper';
+import { IServiceActionResult } from '../../../utils/serviceWrapper';
 
 /**
  * On signup:
@@ -32,7 +32,7 @@ async function signup( signupFields: CreatedUserValidator ) {
     ...signupFields, 
     password: hashedPassword
   });
-
+  
   const token = await generateJWT({ 
     userId:  user.id,
     timestamp: Date.now(),
@@ -40,13 +40,13 @@ async function signup( signupFields: CreatedUserValidator ) {
   });
 
   //send welcome mail;
-
-  let responseData //: Awaited<IServiceActionResult> ;
+  
+  let responseData: IServiceActionResult;
 
   responseData = {
     statusCode: 201,
     message: 'User created successfully',
-    data: { createdUser: { ...user, password: 'hidden' }},
+    data: { createdUser: { ...user._doc, password: 'hidden' }},
     token: {
       flag: TokenFlag.AUTH,
       value: token
