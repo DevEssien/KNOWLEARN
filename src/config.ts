@@ -3,11 +3,13 @@ import { join } from "path";
 
 type TConfig = {
   app: {
-    port: number,
-    env: string
+    port: number;
+    env: string;
+    saltRounds: number;
+    secret: string;
   };
   db: {
-    uri: string
+    uri: string;
   };
 }
 
@@ -28,7 +30,9 @@ dotenv.config({
 const config: TConfig = {
   app: {
     port: +(process.env.PORT || 3001),
-    env: process.env.APP_ENV as AppENV
+    env: process.env.APP_ENV as AppENV,
+    saltRounds: +process.env.SALT_ROUNDS!,
+    secret: process.env.USER_SECRET!
   },
   db: {
     uri: process.env.LOCAL_DB_URI!

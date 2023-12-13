@@ -3,6 +3,7 @@ import { json, urlencoded } from "body-parser";
 import userRouter from "./routers/user/index";
 import apiDocRouter from './routers/docs/index';
 import GeneralMiddleware from "./middleware/general";
+import { faker} from '@faker-js/faker';
 
 const {
   CORS,
@@ -27,10 +28,16 @@ app.use(CORS)
 app.use(DevLogs)
 // app.use(routeLogger);
 
-app.use('/api/v1', userRouter);
+export const apiBase = '/api/v1'
+
+app.use(apiBase, userRouter);
 app.use(apiDocRouter);
 
 app.use(NotFoundHandler);
 app.use(ErrorHandler);
+
+const name = faker.internet.email();
+console.log(name)
+
 
 export default app;

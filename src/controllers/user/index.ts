@@ -1,6 +1,7 @@
 import { Request } from "express";
 import { wrapHandler } from '../../utils/serviceWrapper';
 import UserService from "./services/user.service";
+import UserSignup from '../auth/services/signup';
 
 
 export default class UserController {
@@ -12,14 +13,16 @@ export default class UserController {
         return UserService.getUserById({ _id: req.params?.userId});
     });
 
-    public static getUserByEmail = wrapHandler((req: Request) => {
-        return UserService.getUserByEmail(req.body?.email);
-    });
+    // public static getUserByEmail = wrapHandler((req: Request) => {
+    //     return UserService.getUserByEmail(req.body?.email);
+    // });
     
     public static createUser = wrapHandler((req: Request) => {
-        return UserService.createUser({ ...req.body});
+        const signup = UserSignup({ ...req.body});
+        console.log('signup ', signup)
+        return signup;    
     });
-
+ 
     public static updateUser = wrapHandler((req: Request) => {
         const _id = req.params?.userId
         return UserService.updateUser( { _id }, { ...req.body } );
