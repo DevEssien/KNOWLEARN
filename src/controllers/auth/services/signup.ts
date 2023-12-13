@@ -35,10 +35,11 @@ async function signup( signupFields: CreatedUserValidator ) {
   
   const token = await generateJWT({ 
     userId:  user.id,
+    flag: TokenFlag.AUTH,
     timestamp: Date.now(),
-    flag: TokenFlag.AUTH
   });
 
+  //send otp
   //send welcome mail;
   
   let responseData: IServiceActionResult;
