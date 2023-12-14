@@ -19,6 +19,7 @@ export interface IUser extends IGeneric {
   modules_completed_ids:Types.ObjectId[] //integer[] [ref: > Module.id] 
   otp: Number;
   otp_status: OTPStatus
+  otp_creation_date: Date;
   otp_expiration_date: Date;
   reset_token : String;
   reset_token_expiration_date: Date;
@@ -64,6 +65,7 @@ const UserSchema = new Schema<IUser>(
             enum: Object.values(OTPStatus),
             default: OTPStatus.INACTIVE
         },
+        otp_creation_date: { type: Date},
         otp_expiration_date: { type: Date },
         reset_token: { type: String },
         reset_token_expiration_date: Date,
@@ -78,4 +80,10 @@ UserSchema.virtual('fullName')
     this.set({ first_name, last_name });
 });
 
-export default model<IUser>('User', UserSchema);
+const UserModel =  model<IUser>('User', UserSchema);
+
+export function hasColumn(columnName: string) {
+    return UserModel.schema.path(columnName) !== undefined;
+}
+
+export default UserModel;

@@ -1,10 +1,10 @@
 import 'reflect-metadata';
-import { validate } from 'class-validator';
 import { CreatedUserValidator, IDValidator, GenericValidator } from '../validators/index';
 import UserRepo, {ICreateUser} from '../../../db/repositories/user.repo';
 import UserModel, { IUser} from '../../../db/models/User';
 import { NotFoundException, ValidationException, ResourceConflictException, InternalServerException } from '../../../libs/exceptions/index';
 import { ErrorMessages } from '../../../libs/exceptions/messages';
+import { Validate } from '../../../utils/index';
 
 export const User = new UserRepo(UserModel);
 
@@ -22,7 +22,7 @@ export default class  UserService {
 
   public static async getUserById(idDto: IDValidator) {
     const idValidatableField = new IDValidator(idDto._id);
-    const errors = await validate(idValidatableField);
+    const errors = await Validate(idValidatableField);
     
     if (errors.length > 0) throw new ValidationException(ErrorMessages.INVALID_ID, errors);
 
@@ -36,12 +36,12 @@ export default class  UserService {
   }
 
   public static async getUserByEmail(emailDto: GenericValidator): Promise<IUser> {
-    const emailValidatorField = new GenericValidator(emailDto.email);
-    const errors = await validate(emailValidatorField);
+    const emailValidatableField = new GenericValidator(emailDto.email);
+    const errors = await Validate(emailValidatableField);
     
     if (errors.length > 0) throw new ValidationException(ErrorMessages.INVALID_EMAIL, errors);
 
-    const user = await User.getUserByEmail(emailValidatorField.email);
+    const user = await User.getUserByEmail(emailValidatableField.email);
     if (!user) throw new NotFoundException(ErrorMessages.NO_FOUND_USER);
 
     return user;
@@ -51,7 +51,7 @@ export default class  UserService {
     const { email, fullName, password, role } = createUserDto;
     
     const userValidatableFields = new CreatedUserValidator(email, <string>password, fullName, role);
-    const errors = await validate(userValidatableFields, { validationError: { target: false }});
+    const errors = await Validate(userValidatableFields);
 
     if (errors.length > 0) throw new ValidationException(ErrorMessages.INVALID_INPUT, errors);
 
@@ -66,7 +66,7 @@ export default class  UserService {
 
   public static async updateUser(filter: IDValidator, updateUserDto: Partial<IUser>) {
     const idValidatableField = new IDValidator(filter._id);
-    const errors = await validate(idValidatableField);
+    const errors = await Validate(idValidatableField);
   
     if (errors.length > 0) throw new ValidationException(ErrorMessages.INVALID_INPUT, errors);
   
@@ -83,7 +83,7 @@ export default class  UserService {
 
   public static async deleteUserById(filter: IDValidator) {
     const idValidatableField = new IDValidator(filter._id);
-    const errors = await validate(idValidatableField);
+    const errors = await Validate(idValidatableField);
   
     if (errors.length > 0) throw new ValidationException(ErrorMessages.INVALID_INPUT, errors);
 

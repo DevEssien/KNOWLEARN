@@ -2,9 +2,10 @@ import UserService, { User} from '../../user/services/user.service';
 import { CreatedUserValidator } from '../../user/validators/index';
 import { ResourceConflictException, ServiceException } from  '../../../libs/exceptions/index';
 import { ErrorMessages } from  '../../../libs/exceptions/messages';
-import { bcryptHash, generateJWT } from '../../../utils/index';
+import { bcryptHash, generateJWT, generateOTP } from '../../../utils/index';
 import { TokenFlag } from '../../../dto/app';
 import { IServiceActionResult } from '../../../utils/serviceWrapper';
+import { OTPStatus } from '../../../db/enums/index';
 
 /**
  * On signup:
@@ -40,6 +41,16 @@ async function signup( signupFields: CreatedUserValidator ) {
   });
 
   //send otp
+  //generate otp
+  const otp = await generateOTP(6);
+  user.otp = otp;
+
+  //set otp exp date send and so on
+  user.otp_status = OTPStatus.PENDING;
+
+  //set otp expiratio time to 20mins top
+  
+  
   //send welcome mail;
   
   let responseData: IServiceActionResult;
