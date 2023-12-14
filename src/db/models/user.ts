@@ -17,9 +17,8 @@ export interface IUser extends IGeneric {
   role: UserRole  
   courses_enrolled_ids: Types.ObjectId[]; // integer[]  [ref: > Course.id] 
   modules_completed_ids:Types.ObjectId[] //integer[] [ref: > Module.id] 
-  otp: Number| undefined;
+  otp: Number;
   otp_status: OTPStatus
-  otp_creation_date: Date;
   otp_expiration_date: Date;
   reset_token : String;
   reset_token_expiration_date: Date;
@@ -65,7 +64,6 @@ const UserSchema = new Schema<IUser>(
             enum: Object.values(OTPStatus),
             default: OTPStatus.INACTIVE
         },
-        otp_creation_date: { type: Date},
         otp_expiration_date: { type: Date },
         reset_token: { type: String },
         reset_token_expiration_date: Date,

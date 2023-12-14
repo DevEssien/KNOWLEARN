@@ -29,16 +29,11 @@ async function signup( signupFields: CreatedUserValidator ) {
 
   if (!role) throw new ServiceException('Role does not exist');
 
-  //send otp
-  //generate otp
   const otp = await generateOTP(6);
-  // user.otp = otp;
 
-  //set otp exp date send and so on
-  // user.otp_status = OTPStatus.PENDING;
-
-  //set otp expiratio time to 20mins top
-  
+  //set otp expiration time to 20mins top
+  const date = new Date();
+  const otpExpDate = new Date(date.getTime() + ( 20 * 60 * 1000 ));
   
   //send welcome mail;
 
@@ -47,7 +42,7 @@ async function signup( signupFields: CreatedUserValidator ) {
     password: hashedPassword,
     otp: +otp,
     otp_status: OTPStatus.PENDING,
-    otp_creation_date: Date.now()
+    otp_expiration_date: otpExpDate
   });
   
   const token = await generateJWT({ 
