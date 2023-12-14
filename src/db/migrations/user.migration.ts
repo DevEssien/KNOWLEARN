@@ -9,6 +9,7 @@ export async function upColumns(columnName: string) {
       type: Date
     }
   });
+  await UserModel.syncIndexes();
   
   try {
       const userDocs = await UserModel.updateMany({}, { $set: { [columnName]: null } })

@@ -17,7 +17,7 @@ export interface IUser extends IGeneric {
   role: UserRole  
   courses_enrolled_ids: Types.ObjectId[]; // integer[]  [ref: > Course.id] 
   modules_completed_ids:Types.ObjectId[] //integer[] [ref: > Module.id] 
-  otp: Number;
+  otp: Number| undefined;
   otp_status: OTPStatus
   otp_creation_date: Date;
   otp_expiration_date: Date;

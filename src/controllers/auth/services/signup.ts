@@ -29,9 +29,25 @@ async function signup( signupFields: CreatedUserValidator ) {
 
   if (!role) throw new ServiceException('Role does not exist');
 
+  //send otp
+  //generate otp
+  const otp = await generateOTP(6);
+  // user.otp = otp;
+
+  //set otp exp date send and so on
+  // user.otp_status = OTPStatus.PENDING;
+
+  //set otp expiratio time to 20mins top
+  
+  
+  //send welcome mail;
+
   user = await UserService.createUser({ 
     ...signupFields, 
-    password: hashedPassword
+    password: hashedPassword,
+    otp: +otp,
+    otp_status: OTPStatus.PENDING,
+    otp_creation_date: Date.now()
   });
   
   const token = await generateJWT({ 
@@ -40,18 +56,7 @@ async function signup( signupFields: CreatedUserValidator ) {
     timestamp: Date.now(),
   });
 
-  //send otp
-  //generate otp
-  const otp = await generateOTP(6);
-  user.otp = otp;
-
-  //set otp exp date send and so on
-  user.otp_status = OTPStatus.PENDING;
-
-  //set otp expiratio time to 20mins top
   
-  
-  //send welcome mail;
   
   let responseData: IServiceActionResult;
 

@@ -47,8 +47,8 @@ export default class  UserService {
     return user;
   }
   
-  public static async createUser(createUserDto: CreatedUserValidator ) {
-    const { email, fullName, password, role } = createUserDto;
+  public static async createUser(createUserDto: { fullName: string } & Partial<Record<keyof IUser, any>>) {
+    const { email, fullName, password, role, } = createUserDto;
     
     const userValidatableFields = new CreatedUserValidator(email, <string>password, fullName, role);
     const errors = await Validate(userValidatableFields);
@@ -58,7 +58,7 @@ export default class  UserService {
     const user = await User.getUserByEmail(createUserDto?.email);
     if (user) throw new ResourceConflictException(ErrorMessages.EMAIL_EXIST);
 
-    const newUser = User.createUser(<ICreateUser>createUserDto);
+    const newUser = User.createUser({ ...<ICreateUser>createUserDto }, );
     if (!newUser) throw new InternalServerException('Unable To Create User!');
 
     return newUser;
