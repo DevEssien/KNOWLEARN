@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { IsString, IsEmail, MinLength, IsEnum } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { UserRole } from '../../../db/enums/index';
+import { UserRole, } from '../../../db/enums/index';
 
 export class GenericValidator {
   @IsString({ message: 'Email address must be a string'})
@@ -38,10 +38,19 @@ export class CreatedUserValidator extends GenericValidator {
   @IsEnum(UserRole)
   role: string;
 
-  constructor(email: string, password: string, fullName: string, role: string) {
+  // @IsNumber()
+  // @Length(6)
+  // otp?: number;
+
+  // @IsEnum(OTPStatus)
+  // otp_status?: string;
+
+  constructor(email: string, password: string, fullName: string, role: string, _otp?: number, _otp_status?: string) {
     super(email, password)
     this.fullName = fullName;
-    this.role = role
+    this.role = role;
+    // this.otp = otp;
+    // this.otp_status = otp_status;
   }
 }
 

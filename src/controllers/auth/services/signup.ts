@@ -2,9 +2,10 @@ import UserService, { User} from '../../user/services/user.service';
 import { CreatedUserValidator } from '../../user/validators/index';
 import { ResourceConflictException, ServiceException } from  '../../../libs/exceptions/index';
 import { ErrorMessages } from  '../../../libs/exceptions/messages';
-import { bcryptHash, generateJWT } from '../../../utils/index';
+import { bcryptHash, generateJWT, generateOTP } from '../../../utils/index';
 import { TokenFlag } from '../../../dto/app';
 import { IServiceActionResult } from '../../../utils/serviceWrapper';
+import { OTPStatus } from '../../../db/enums/index';
 
 /**
  * On signup:
@@ -28,9 +29,20 @@ async function signup( signupFields: CreatedUserValidator ) {
 
   if (!role) throw new ServiceException('Role does not exist');
 
+  const otp = await generateOTP(6);
+
+  //set otp expiration time to 20mins top
+  const date = new Date();
+  const otpExpDate = new Date(date.getTime() + ( 20 * 60 * 1000 ));
+  
+  //send welcome mail;
+
   user = await UserService.createUser({ 
     ...signupFields, 
-    password: hashedPassword
+    password: hashedPassword,
+    otp: +otp,
+    otp_status: OTPStatus.PENDING,
+    otp_expiration_date: otpExpDate
   });
   
   const token = await generateJWT({ 
@@ -39,8 +51,7 @@ async function signup( signupFields: CreatedUserValidator ) {
     timestamp: Date.now(),
   });
 
-  //send otp
-  //send welcome mail;
+  
   
   let responseData: IServiceActionResult;
 

@@ -78,4 +78,10 @@ UserSchema.virtual('fullName')
     this.set({ first_name, last_name });
 });
 
-export default model<IUser>('User', UserSchema);
+const UserModel =  model<IUser>('User', UserSchema);
+
+export function hasColumn(columnName: string) {
+    return UserModel.schema.path(columnName) !== undefined;
+}
+
+export default UserModel;
