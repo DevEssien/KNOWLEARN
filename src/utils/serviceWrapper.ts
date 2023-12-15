@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction, RequestHandler } from 'express';
+import { TokenFlag } from '../dto/app';
 
 export interface IServiceActionResult {
   status?: 'success';
@@ -6,7 +7,7 @@ export interface IServiceActionResult {
   message: string;
   data?: Record<string, any>;
   token?: {
-    flag: string,
+    flag: TokenFlag,
     value: string
   } | null
 }

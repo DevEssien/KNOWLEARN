@@ -2,10 +2,11 @@ import UserService, { User} from '../../user/services/user.service';
 import { CreatedUserValidator } from '../../user/validators/index';
 import { ResourceConflictException, ServiceException } from  '../../../libs/exceptions/index';
 import { ErrorMessages } from  '../../../libs/exceptions/messages';
-import { bcryptHash, generateJWT, generateOTP } from '../../../utils/index';
+import { bcryptHash, generateJWT } from '../../../utils/index';
 import { TokenFlag } from '../../../dto/app';
 import { IServiceActionResult } from '../../../utils/serviceWrapper';
 import { OTPStatus } from '../../../db/enums/index';
+import OTPValidator from '../../../utils/otpValidator';
 
 /**
  * On signup:
@@ -19,6 +20,8 @@ import { OTPStatus } from '../../../db/enums/index';
  * - Send welcome email
  **/
 
+const otpValidator = new OTPValidator(20)
+
 async function signup( signupFields: CreatedUserValidator ) {
   const { email, password, role } = signupFields;
 
@@ -29,11 +32,10 @@ async function signup( signupFields: CreatedUserValidator ) {
 
   if (!role) throw new ServiceException('Role does not exist');
 
-  const otp = await generateOTP(6);
+  const otp = await otpValidator.generateOTP(6);
 
   //set otp expiration time to 20mins top
-  const date = new Date();
-  const otpExpDate = new Date(date.getTime() + ( 20 * 60 * 1000 ));
+  const otpExpDate = otpValidator.generateOTPExpirationDate()
   
   //send welcome mail;
 

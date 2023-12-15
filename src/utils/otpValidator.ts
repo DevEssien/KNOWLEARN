@@ -1,3 +1,10 @@
+
+type TOTPCheckResponse =  {
+  isOTP: boolean;
+} | {
+  error: string;
+}
+
 export default class OTPValidator {
   private otpExpirationMinutes: number;
 
@@ -5,7 +12,7 @@ export default class OTPValidator {
     this.otpExpirationMinutes = otpExpirationMinutes
   }
 
-  public static generateOTP(length: number = 6): Promise<string> {
+  public generateOTP(length: number = 6): Promise<string> {
     const numberBank = '7890123654'.split('');
     let otp = ''
 
@@ -21,10 +28,15 @@ export default class OTPValidator {
     });
   }
 
-  public static isValidOTP( inputOTP: number, referenceOTP: number, otpExpirationTime: Date) {  
+  
+  public static isValidOTP( inputOTP: number, referenceOTP: number, otpExpirationTime: Date): TOTPCheckResponse {  
     const currentTime = new Date(); 
+
     const validTime =   otpExpirationTime > currentTime;
-    return inputOTP  && validTime && referenceOTP === inputOTP;
+    if (!validTime) return { error:' OTP Has Expired' };
+
+    const isOTP = Boolean(referenceOTP === inputOTP)
+    return { isOTP };
   }
 
   public generateOTPExpirationDate() {
