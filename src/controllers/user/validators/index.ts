@@ -32,11 +32,8 @@ export class IDValidator {
 }
 
 export class CreatedUserValidator extends GenericValidator {
-  @IsString({ message: 'password must be of type string'})
-  rawPassword: string;
-
   @IsString({ message: "Confirm password must be of type string"})
-  @Match('rawPassword')
+  @Match('password')
   confirmPassword: string;
 
   @IsString({ message: "Names must be a string with at least two names" })
@@ -59,7 +56,6 @@ export class CreatedUserValidator extends GenericValidator {
     confirmPassword: string,
     fullName: string,
     role: string,
-    rawPassword: string,
     _otp?: number,
     _otp_status?: string
   ) {
@@ -67,24 +63,5 @@ export class CreatedUserValidator extends GenericValidator {
     this.confirmPassword = confirmPassword;
     this.fullName = fullName;
     this.role = role;
-    this.rawPassword = rawPassword;
-    // this.confirmPw(password, confirmPassword);
-    // this.otp = otp;
-    // this.otp_status = otp_status;
-
   }
-
-  // confirmPw(password: string, confirmPassword: string) {
-  //   const passwordForm = z
-  //   .object({
-  //     password: z.string(),
-  //     confirmPassword: z.string(),
-  //   })
-  //   .refine((data) => data.password === data.confirmPassword, {
-  //     message: "Confirm password do not match password",
-  //     path: ["confirmPassword"], // path of error
-  //   });
-  
-  //   return passwordForm.parse({ password, confirmPassword });
-  // }
 }

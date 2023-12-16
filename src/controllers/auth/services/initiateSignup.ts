@@ -1,6 +1,7 @@
 import UserService, { User} from '../../user/services/user.service';
 import { CreatedUserValidator } from '../../user/validators/index';
-import { ResourceConflictException, ServiceException } from  '../../../libs/exceptions/index';
+import checkSignupInfo from '../../user/validators/userSignupInfoCheck';
+import { ResourceConflictException, ServiceException, ValidationException } from  '../../../libs/exceptions/index';
 import { ErrorMessages } from  '../../../libs/exceptions/messages';
 import { bcryptHash, generateJWT } from '../../../utils/index';
 import { TokenFlag } from '../../../dto/app';
@@ -25,6 +26,10 @@ const otpValidator = new OTPValidator(20)
 async function signup( signupFields: CreatedUserValidator ) {
   const { email, password, role } = signupFields;
 
+  const errors = await checkSignupInfo(signupFields);
+
+  if (errors.length > 0) throw new ValidationException(ErrorMessages.INVALID_INPUT, errors);
+
   let user = await User.getUserByEmail(email);
   if (user) throw new ResourceConflictException(ErrorMessages.ACCOUNT_EXIST);
 
@@ -39,7 +44,7 @@ async function signup( signupFields: CreatedUserValidator ) {
   
   //send welcome mail;
 
-  user = await UserService.createUser(<string>password, { 
+  user = await UserService.createUser({ 
     ...signupFields, 
     password: hashedPassword,
     otp: +otp,

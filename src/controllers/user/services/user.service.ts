@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { CreatedUserValidator, IDValidator, GenericValidator } from '../validators/index';
+import { IDValidator, GenericValidator } from '../validators/index';
 import UserRepo, {ICreateUser} from '../../../db/repositories/user.repo';
 import UserModel, { IUser} from '../../../db/models/User';
 import { NotFoundException, ValidationException, ResourceConflictException, InternalServerException } from '../../../libs/exceptions/index';
@@ -47,13 +47,13 @@ export default class  UserService {
     return user;
   }
   
-  public static async createUser(rawPassword: string,createUserDto: { confirmPassword: string, fullName: string } & Partial<Record<keyof IUser, any>>) {
-    const { email, fullName, password, confirmPassword, role, } = createUserDto;
+  public static async createUser(createUserDto: { confirmPassword: string, fullName: string } & Partial<Record<keyof IUser, any>>) {
+    // const { email, fullName, password, confirmPassword, role, } = createUserDto;
     
-    const userValidatableFields = new CreatedUserValidator(email, <string>password, confirmPassword, fullName, role, rawPassword);
-    const errors = await Validate(userValidatableFields);
+    // const userValidatableFields = new CreatedUserValidator(email, password, confirmPassword, fullName, role, rawPassword);
+    // const errors = await Validate(userValidatableFields);
 
-    if (errors.length > 0) throw new ValidationException(ErrorMessages.INVALID_INPUT, errors);
+    // if (errors.length > 0) throw new ValidationException(ErrorMessages.INVALID_INPUT, errors);
 
     const user = await User.getUserByEmail(createUserDto?.email);
     if (user) throw new ResourceConflictException(ErrorMessages.EMAIL_EXIST);
