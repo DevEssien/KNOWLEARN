@@ -47,10 +47,10 @@ export default class  UserService {
     return user;
   }
   
-  public static async createUser(createUserDto: { fullName: string } & Partial<Record<keyof IUser, any>>) {
-    const { email, fullName, password, role, } = createUserDto;
+  public static async createUser(rawPassword: string,createUserDto: { confirmPassword: string, fullName: string } & Partial<Record<keyof IUser, any>>) {
+    const { email, fullName, password, confirmPassword, role, } = createUserDto;
     
-    const userValidatableFields = new CreatedUserValidator(email, <string>password, fullName, role);
+    const userValidatableFields = new CreatedUserValidator(email, <string>password, confirmPassword, fullName, role, rawPassword);
     const errors = await Validate(userValidatableFields);
 
     if (errors.length > 0) throw new ValidationException(ErrorMessages.INVALID_INPUT, errors);

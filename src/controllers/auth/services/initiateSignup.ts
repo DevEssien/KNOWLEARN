@@ -39,7 +39,7 @@ async function signup( signupFields: CreatedUserValidator ) {
   
   //send welcome mail;
 
-  user = await UserService.createUser({ 
+  user = await UserService.createUser(<string>password, { 
     ...signupFields, 
     password: hashedPassword,
     otp: +otp,
