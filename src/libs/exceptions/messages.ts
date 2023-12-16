@@ -1,5 +1,6 @@
 export enum ErrorMessages {
     ACCOUNT_EXIST = 'Account Already Exist!',
+    UPDATE_USER_FAILED = 'Unable To Update User',
     UNAUTHORIZED = 'Unauthorized!',
     INVALID_ID ='Invalid Request ID Parameter!',
     INVALID_EMAIL = 'Invalid Email',

@@ -2,12 +2,14 @@ import bcrypt from 'bcryptjs';
 import { validate } from 'class-validator';
 import * as jwt from 'jsonwebtoken';
 import config from '../config';
+import { TokenFlag } from '../dto/app';
 
 
-// type TJwtData = {
-//   userId: string;
-//   flag: TokenFlag
-// }
+type TJwtData = {
+  userId: string;
+  flag: TokenFlag;
+  timestamp: number;
+}
 
 export function bcryptHash(password: string) {
   return bcrypt.hash(password, config.app.saltRounds);
@@ -17,7 +19,7 @@ export function comparePassword(password: string, hashedPassword: string) {
   return bcrypt.compare(password, hashedPassword);
 }
 
-export function generateJWT( payload: Record<string, any>, secret: string = config.app.secret, expiresIn?: string ): Promise<string> {
+export function generateJWT( payload: TJwtData, secret: string = config.app.secret, expiresIn?: string ): Promise<string> {
   const jwtPayload = { ...payload };
   const expirationTime: string = expiresIn || '720h';
 

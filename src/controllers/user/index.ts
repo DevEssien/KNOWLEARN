@@ -1,7 +1,8 @@
 import { Request } from "express";
 import { wrapHandler } from '../../utils/serviceWrapper';
 import UserService from "./services/user.service";
-import UserSignup from '../auth/services/signup';
+import InitUserSignup from '../auth/services/initiateSignup';
+import CompleteUserSignup from '../auth/services/completeSignup';
 import UserLogin from '../auth/services/login';
 
 
@@ -19,8 +20,13 @@ export default class UserController {
     });
     
     public static createUser = wrapHandler((req: Request) => {
-        return UserSignup({ ...req.body});
+        return InitUserSignup({ ...req.body});
     });
+
+    public static verifyEmail = wrapHandler((req: Request) => {
+        const { email, otp} = req.body;
+        return CompleteUserSignup(email, otp);
+    })
  
     public static updateUser = wrapHandler((req: Request) => {
         const _id = req.params?.userId
