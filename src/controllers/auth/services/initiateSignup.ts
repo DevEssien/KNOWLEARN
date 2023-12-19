@@ -8,6 +8,7 @@ import { TokenFlag } from '../../../dto/app';
 import { IServiceActionResult } from '../../../utils/serviceWrapper';
 import { OTPStatus } from '../../../db/enums/index';
 import OTPValidator from '../../../utils/otpValidator';
+import Mail from '../../../libs/mailer/index'
 
 /**
  * On signup:
@@ -43,6 +44,18 @@ async function signup( signupFields: CreatedUserValidator ) {
   const otpExpDate = otpValidator.generateOTPExpirationDate()
   
   //send welcome mail;
+  const mailResult = await Mail.send({
+    email: email,
+    templateContent: `<h1>Welcome to Knowlearn.</h1><br> your otp code is ${otp}`,
+    subject: 'Knowlearn -otp code',
+    // data: {
+    //   firstName: user.firstName,
+    //   lastName: user.lastName
+    // }
+  });
+
+  if (mailResult.response.status !== 200) throw new ServiceException('An error occured due to poor network');
+ 
 
   user = await UserService.createUser({ 
     ...signupFields, 
@@ -64,7 +77,7 @@ async function signup( signupFields: CreatedUserValidator ) {
 
   responseData = {
     statusCode: 201,
-    message: 'User created successfully',
+    message: 'User created with otp sent',
     data: { createdUser: { ...user._doc, password: 'hidden' }},
     token: {
       flag: TokenFlag.AUTH,

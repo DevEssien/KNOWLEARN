@@ -16,9 +16,9 @@ export interface ISender<T>{
     send(mail: IMail): Promise<T>;
 }
 
-export declare type TMailOptions = {
+export declare type TMailerOptions = {
     sender: ISender<any>;
-    templateEngine: ITemplateEngine;
+    templateEngine?: ITemplateEngine;
     templatePath: string;
 }
 

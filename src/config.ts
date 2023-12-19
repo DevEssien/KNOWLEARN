@@ -11,6 +11,11 @@ type TConfig = {
   db: {
     uri: string;
   };
+  mail: {
+    templatePath: string;
+    secret?: string;
+    key: string
+  }
 }
 
 export enum AppENV {
@@ -36,6 +41,11 @@ const config: TConfig = {
   },
   db: {
     uri: process.env.LOCAL_DB_URI!
+  },
+  mail: {
+    templatePath: join(__dirname, 'libs', 'mailer', 'templates'),
+    secret: process.env.ESSIEN_MJ_API_SECRET!,
+    key: process.env.ESSIEN_MJ_API_KEY!
   }
 }
 

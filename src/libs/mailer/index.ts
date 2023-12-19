@@ -1,9 +1,12 @@
 import Mailjet from 'node-mailjet';
+import config from '../../config';
 import { IMail, ISender } from '../../types';
 
+const { secret: apiSecret, key: apiKey } = config.mail
+
 const mailjet = new Mailjet({
-    apiKey: process.env.ESSIEN_MJ_API_KEY,
-    apiSecret: process.env.ESSIEN_MJ_API_SECRET,
+    apiKey: apiKey,
+    apiSecret: apiSecret,
 });
 
 export class Sender implements ISender<Record<string | number, any>> {
@@ -27,6 +30,7 @@ export class Sender implements ISender<Record<string | number, any>> {
             },
         ],
     });
+    console.log('entered');
     // if (result.response.status !== 200) return next(new AppError('An error occured due to poor network', 500));        
     
     // return {
@@ -36,5 +40,9 @@ export class Sender implements ISender<Record<string | number, any>> {
     return result
   }
 }
+
+const Mail = new Sender()
+
+export default Mail;
 
 // @Learn-ing1 FOR SCHVOLTE

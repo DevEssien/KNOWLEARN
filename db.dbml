@@ -47,7 +47,7 @@ Table User {
   role UserRole  
   courses_enrolled_ids integer[]  [ref: > Course.id] 
   modules_completed_ids integer[] [ref: > Module.id] 
-  otp integer
+  otp varchar
   otp_status OTPStatus
   otp_expiration_date timestamp
   reset_token varchar
