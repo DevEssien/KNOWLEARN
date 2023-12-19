@@ -30,13 +30,7 @@ export class Sender implements ISender<Record<string | number, any>> {
             },
         ],
     });
-    console.log('entered');
-    // if (result.response.status !== 200) return next(new AppError('An error occured due to poor network', 500));        
     
-    // return {
-    //     otp: otp ?? null,
-    //     mailStatus: result.response.status
-    // };
     return result
   }
 }

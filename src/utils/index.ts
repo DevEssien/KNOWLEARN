@@ -4,8 +4,9 @@ import * as jwt from 'jsonwebtoken';
 import config from '../config';
 import { TokenFlag } from '../dto/app';
 
+const { secret: tokenSecret } = config.app;
 
-type TJwtData = {
+type TJwtData = jwt.JwtPayload & {
   userId: string;
   flag: TokenFlag;
   timestamp: number;
@@ -19,7 +20,7 @@ export function comparePassword(password: string, hashedPassword: string) {
   return bcrypt.compare(password, hashedPassword);
 }
 
-export function generateJWT( payload: TJwtData, secret: string = config.app.secret, expiresIn?: string ): Promise<string> {
+export function generateJWT( payload: TJwtData, secret: string = tokenSecret, expiresIn?: string ): Promise<string> {
   const jwtPayload = { ...payload };
   const expirationTime: string = expiresIn || '720h';
 
@@ -29,6 +30,15 @@ export function generateJWT( payload: TJwtData, secret: string = config.app.secr
       return resolve(<string>token)
     });
   });
+}
+
+export async function decodeToken(token: string): Promise<TJwtData> {
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, tokenSecret, (error: any, decoded: jwt.JwtPayload | any) => {
+      if (error) return reject(error);
+      return resolve(<TJwtData>decoded)
+    })
+  })
 }
 
 export function Validate<T extends Record<string, any>>(Tobj: T) {

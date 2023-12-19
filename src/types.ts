@@ -1,3 +1,5 @@
+import { RequestHandler } from 'express';
+
 export interface IMail {
     email: string;
     templateContent: string;
@@ -5,21 +7,10 @@ export interface IMail {
     data?: Record<string, any>;
 }
 
-export interface ITemplateEngine {
-    templates: string[];
-    templatePath: string;
-    render(mail: IMail): void;
-    compile(sources: string): string;
-}
+export type TMiddlewares = RequestHandler[] | RequestHandler;
 
 export interface ISender<T>{
     send(mail: IMail): Promise<T>;
-}
-
-export declare type TMailerOptions = {
-    sender: ISender<any>;
-    templateEngine?: ITemplateEngine;
-    templatePath: string;
 }
 
 export enum ResponseStatus {

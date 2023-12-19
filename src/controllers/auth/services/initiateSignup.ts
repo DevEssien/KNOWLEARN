@@ -46,12 +46,8 @@ async function signup( signupFields: CreatedUserValidator ) {
   //send welcome mail;
   const mailResult = await Mail.send({
     email: email,
-    templateContent: `<h1>Welcome to Knowlearn.</h1><br> your otp code is ${otp}`,
-    subject: 'Knowlearn -otp code',
-    // data: {
-    //   firstName: user.firstName,
-    //   lastName: user.lastName
-    // }
+    templateContent: `<h1>Welcome to Knowlearn.</h1><br> Your otp code is ${otp}`,
+    subject: 'Knowlearn -otp code'
   });
 
   if (mailResult.response.status !== 200) throw new ServiceException('An error occured due to poor network');
