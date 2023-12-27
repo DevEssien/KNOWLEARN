@@ -1,6 +1,7 @@
 import { UserRole } from '../db/enums/index';
 import { Request } from 'express';
 
+
 export enum TokenFlag {
   AUTH = 'auth',
   EMAIL_VERIFICATION = 'email-verification'

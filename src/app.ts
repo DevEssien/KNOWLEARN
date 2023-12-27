@@ -33,8 +33,8 @@ export const apiBase = '/api/v1'
 app.use(apiBase, userRouter);
 app.use(apiDocRouter);
 
-app.use(NotFoundHandler);
 app.use(ErrorHandler);
+app.use(NotFoundHandler);
 
 const name = faker.internet.email();
 console.log(name)
