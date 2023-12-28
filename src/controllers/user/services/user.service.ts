@@ -5,6 +5,9 @@ import UserModel, { IUser} from '../../../db/models/User';
 import { NotFoundException, ValidationException, ResourceConflictException, InternalServerException } from '../../../libs/exceptions/index';
 import { ErrorMessages } from '../../../libs/exceptions/messages';
 import { Validate } from '../../../utils/index';
+// import { SessionRequest } from '../../../dto/app';
+// import { TokenFlag } from '../../../dto/app';
+// import { Middleware } from '../../../core/decorators';
 
 export const User = new UserRepo(UserModel);
 
@@ -64,6 +67,7 @@ export default class  UserService {
     return newUser;
   }
 
+  // @Middleware([TokenFlag.AUTH])
   public static async updateUser(filter: IDValidator, updateUserDto: Partial<IUser>) {
     const idValidatableField = new IDValidator(filter._id);
     const errors = await Validate(idValidatableField);
@@ -81,6 +85,7 @@ export default class  UserService {
     }
   }
 
+  
   public static async deleteUserById(filter: IDValidator) {
     const idValidatableField = new IDValidator(filter._id);
     const errors = await Validate(idValidatableField);

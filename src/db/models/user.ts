@@ -4,23 +4,23 @@ import { OTPStatus, UserRole } from '../enums/index';
 
 
 export interface IUser extends IGeneric {
-  first_name: String;
-  last_name: String;
-  username: String;
-  bio: String;
-  email: String;
-  password: String;
-  phoneno: String;
-  is_phone_verified: Boolean;
-  image_url: String;
-  image_id: String;
+  first_name: string;
+  last_name: string;
+  username: string;
+  bio: string;
+  email: string;
+  password: string;
+  phoneno: string;
+  is_phone_verified: boolean;
+  image_url: string;
+  image_id: string;
   role: UserRole  
   courses_enrolled_ids: Types.ObjectId[]; // integer[]  [ref: > Course.id] 
   modules_completed_ids:Types.ObjectId[] //integer[] [ref: > Module.id] 
-  otp: Number;
+  otp: string;
   otp_status: OTPStatus
   otp_expiration_date: Date;
-  reset_token : String;
+  reset_token : string;
   reset_token_expiration_date: Date;
 }
 
@@ -58,7 +58,7 @@ const UserSchema = new Schema<IUser>(
             type: [ Number ],
             ref: 'Module'
         },
-        otp: { type: Number },
+        otp: { type: String },
         otp_status: {
             type: String,
             enum: Object.values(OTPStatus),
