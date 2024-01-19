@@ -27,3 +27,4 @@ export enum CourseLevel {
     MEDIUM = 'medium',
     DIFFICULT = 'difficult'
   }
+

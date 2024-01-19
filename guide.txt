@@ -146,6 +146,21 @@ Users receive notifications about course updates, new content, or upcoming quizz
 Notification preferences can be customized.
 This deep explanation outlines the core functionalities and interactions within the Online Learning Platform API. It provides a comprehensive overview of user management, course creation, content delivery, and analytics. Depending on the project's scope, you can prioritize and implement these features incrementally.
 
-
-2 / 2
+Launch.json:
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Current TS File",
+      "type": "node",
+      "request": "launch",
+      "args": ["${relativeFile}"], "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
+      "sourceMaps": true,
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
 

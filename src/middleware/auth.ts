@@ -30,9 +30,10 @@ export default class Auth {
         role: user.role as UserRole,
       });
 
-      console.log('here in authenticating')
-      next()
-
+      // console.log('Auth next:: ', next.toString())
+      console.log('Auth')
+      return next()
+      
     } catch (error: any) {
       switch (error.name){
         case "TokenExpiredError":
@@ -42,6 +43,7 @@ export default class Auth {
         case "NotBeforeError":
           return next(new AuthenticationException(error.message));
         default:
+          console.log('-----entered this catch')
           return next(error);
       }
     }
