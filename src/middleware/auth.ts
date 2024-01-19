@@ -30,8 +30,8 @@ export default class Auth {
         role: user.role as UserRole,
       });
 
+      // console.log('request ', req.session, 'baseUrl ', req.baseUrl, 'url ', req.url, 'route ', req.route )
       // console.log('Auth next:: ', next.toString())
-      console.log('Auth')
       return next()
       
     } catch (error: any) {

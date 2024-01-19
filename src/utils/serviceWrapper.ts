@@ -20,6 +20,7 @@ export  function wrapHandler(handler: HandlerFn): RequestHandler {
       const { token = null, data  = null, statusCode = 200, message = 'The request was successful' } = await handler(req);
 
       // console.log('wrapper success next:: ', next.toString())
+      // console.log('in handler')
       return res.status(200).json({
         status: 'success',
         statusCode,

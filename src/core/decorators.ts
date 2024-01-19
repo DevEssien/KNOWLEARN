@@ -98,11 +98,31 @@
 // export const Patch = createRouteMethod(HttpMethods.PATCH);
 // export const Delete = createRouteMethod(HttpMethods.DELETE);
 
-import { MetadataKeys, HttpMethods, IRouter } from '../dto/app';
 import 'reflect-metadata'; 
+import { Response, NextFunction } from 'express';
+import Auth from '../middleware/auth';
+import { MetadataKeys, HttpMethods, IRouter, TokenFlag } from '../dto/app';
+
+export function authMiddleware(tokenFlag: TokenFlag): MethodDecorator {
+  return (_target: any, _propertyKey: string | symbol, descriptor: PropertyDescriptor ) => {
+    const originalMethod = descriptor.value;
+    originalMethod;
+
+    descriptor.value = async function ( req: any, res: Response, next: NextFunction, ...args: any[] ) {
+      await Auth.Authenticate(req, res, next, tokenFlag);
+
+      console.log('here in auth')
+      return originalMethod.apply(this, [req, res, next, ...args])
+    }
+    // console.log('token flag ', tokenFlag)
+    // console.log('target ', target)
+    // console.log('propertyKey ', propertyKey)
+    // console.log('descriptor ', descriptor)
+  }
+}
 
 export function Controller(basePath: string): ClassDecorator {
-  return (target) => {
+  return (target: any) => {
     Reflect.defineMetadata(MetadataKeys.BASE_PATH, basePath, target);
   };
 }

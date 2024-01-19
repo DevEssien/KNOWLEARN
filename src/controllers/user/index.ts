@@ -3,25 +3,29 @@ import { Request, Response,
 } from "express";
 import { wrapHandler } from '../../utils/serviceWrapper';
 import UserService from "./services/user.service";
-import { Controller, Get, Put, Delete } from '../../core/decorators';
+import { authMiddleware, Controller, Get, Put, Delete } from '../../core/decorators';
 // import { authMiddleware } from '../../core/decorators';
 // import { SessionRequest } from "../../dto/app";
 // import  Auth from '../../middleware/auth';
-// import { TokenFlag } from "../../dto/app";
+import { TokenFlag } from "../../dto/app";
  
 @Controller('/users')
 export default class UserController {
-    // @authMiddleware(TokenFlag.AUTH)
     @Get()
+    @authMiddleware(TokenFlag.AUTH)
     public static getAllUser(req: Request, res: Response, next: NextFunction){
+        console.log('here in controller')
         return wrapHandler(() => {
+            console.log('here in controller wrapper ')
             return UserService.getAllUser()
         })(req, res, next);
     } 
 
     @Get('/:userId')
     public static getUserById(req: Request, res: Response, next: NextFunction) {
+        console.log('here in controller')
         return wrapHandler((req) => {
+            console.log('here in controller wrapper ')
             return UserService.getUserById({ _id: req.params?.userId});
         })(req, res, next);
     }
