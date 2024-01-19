@@ -43,6 +43,11 @@ export default class GeneralMiddleware {
   }
 
   static NotFoundHandler(req:Request, res: Response, _next: NextFunction) {
+    if (res.headersSent) return;
+
+    console.log('entered the notFound error handler');
+    // console.log('error stack ', error.stack)
+
     return res.status(404).json({
       status: 'error',
       statusCode: 404,

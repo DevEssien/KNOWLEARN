@@ -1,23 +1,34 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, 
+    NextFunction 
+} from "express";
 import { wrapHandler } from '../../utils/serviceWrapper';
 import UserService from "./services/user.service";
 import InitUserSignup from '../auth/services/initiateSignup';
 import CompleteUserSignup from '../auth/services/completeSignup';
 import UserLogin from '../auth/services/login';
-import { authMiddleware } from '../../core/decorators';
+// import { authMiddleware } from '../../core/decorators';
 // import { SessionRequest } from "../../dto/app";
 // import  Auth from '../../middleware/auth';
-import { TokenFlag } from "../../dto/app";
-
+// import { TokenFlag } from "../../dto/app";
+import { Controller, Get, Post } from '../../core/decorators';
+ 
+@Controller('/users')
 export default class UserController {
     // @authMiddleware(TokenFlag.AUTH)
-    public static getAllUser = wrapHandler(() => {
-        return UserService.getAllUser()
-    });
+    @Get('/')
+    public static getAllUser(req: Request, res: Response, next: NextFunction){
+        return wrapHandler(() => {
+            return UserService.getAllUser()
+        })(req, res, next);
+    } 
 
-    public static getUserById = wrapHandler((req: Request) => {
-        return UserService.getUserById({ _id: req.params?.userId});
-    });
+    @Get('/:userId')
+    public static getUserById(req: Request, res: Response, next: NextFunction) {
+        return wrapHandler((req) => {
+            return UserService.getUserById({ _id: req.params?.userId});
+        })(req, res, next);
+    }
+     
 
     public static loginUser = wrapHandler((req: Request) => {
         return UserLogin({ ...req.body });
@@ -33,14 +44,18 @@ export default class UserController {
     })
     
     // @authMiddleware(TokenFlag.AUTH) //this is the issue
+    @Post('')
     public static updateUser(req: Request, res: Response, next: NextFunction) {
+        // console.log('controller next:: ', next)
         return wrapHandler((request: Request) => {
            const req = request;
            const _id = request.params?.userId
            return UserService.updateUser( { _id }, { ...req.body } );
        })(req, res, next);
     }
-    // public static updateUser = wrapHandler((request: Request) => {
+
+    // @authMiddleware(TokenFlag.AUTH) //this is the issue
+    // public static updateUser = wrapHandler((request: Request,) => {
     //         console.log('here in controller')
     //        const req = request;
     //        const _id = request.params?.userId
@@ -49,11 +64,12 @@ export default class UserController {
 
     
     
-    @authMiddleware(TokenFlag.AUTH)
-    public static test(req: Request, res: Response) {
+    // @authMiddleware(TokenFlag.AUTH)
+    public static test(req: Request, res: Response, next: NextFunction) {
         try {
             const { role } = req.body;
-            console.log('role ', role)
+            console.log('controller next:: ', next);
+      
             const user = { 
                 name: 'Essien Emmanuel', 
                 email: 'essienemma300@gmail.com'
@@ -62,8 +78,9 @@ export default class UserController {
             const userEmail = user['email'];
             return res.status(200).json({
                 status: 'success',
+                code: 200,
                 message: 'getting user email',
-                data: { email: userEmail }
+                data: { email: userEmail, role }
             });
         } catch (error) {
             console.log('- error:: ', error);

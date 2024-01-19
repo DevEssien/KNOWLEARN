@@ -1,9 +1,10 @@
 import express from "express";
 import { json, urlencoded } from "body-parser";
-import userRouter from "./routers/user/index";
+// import userRouter from "./routers/user/index";
 import apiDocRouter from './routers/docs/index';
 import GeneralMiddleware from "./middleware/general";
-import { faker} from '@faker-js/faker';
+import { createRouter } from './core/registerRoutes';
+// import { faker} from '@faker-js/faker';
 
 const {
   CORS,
@@ -30,14 +31,17 @@ app.use(DevLogs)
 
 export const apiBase = '/api/v1'
 
-app.use(apiBase, userRouter);
+const router = createRouter();
+app.use(apiBase, router);
+
+// app.use(apiBase, userRouter);
 app.use(apiDocRouter);
 
-app.use(ErrorHandler);
 app.use(NotFoundHandler);
+app.use(ErrorHandler);
 
-const name = faker.internet.email();
-console.log(name)
+// const name = faker.internet.email();
+// console.log(name)
 
 
 export default app;
