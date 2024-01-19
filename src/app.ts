@@ -3,7 +3,7 @@ import { json, urlencoded } from "body-parser";
 // import userRouter from "./routers/user/index";
 import apiDocRouter from './routers/docs/index';
 import GeneralMiddleware from "./middleware/general";
-import { createRouter } from './core/registerRoutes';
+import { createRouter } from './routers/user/registerRoutes';
 // import { faker} from '@faker-js/faker';
 
 const {
@@ -31,8 +31,8 @@ app.use(DevLogs)
 
 export const apiBase = '/api/v1'
 
-const router = createRouter();
-app.use(apiBase, router);
+const userRouter = createRouter();
+app.use(apiBase, userRouter);
 
 // app.use(apiBase, userRouter);
 app.use(apiDocRouter);
