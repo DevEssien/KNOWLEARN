@@ -11,7 +11,7 @@ import UserLogin from '../auth/services/login';
 // import { TokenFlag } from "../../dto/app";
 import { Controller, Post, Put } from '../../core/decorators';
 
-@Controller('/users/auth')
+@Controller({ basePath: '/users/auth' })
 export default class UserController {   
   @Post('/login')
   public static loginUser(req: Request, res: Response, next: NextFunction) {

@@ -30,9 +30,10 @@ export default class Auth {
         role: user.role as UserRole,
       });
 
+      // console.log('request ', req.session, 'baseUrl ', req.baseUrl, 'url ', req.url, 'route ', req.route )
       // console.log('Auth next:: ', next.toString())
-      console.log('Auth')
-      return next()
+      
+      // return next()
       
     } catch (error: any) {
       switch (error.name){
@@ -47,6 +48,21 @@ export default class Auth {
           return next(error);
       }
     }
+  }
+
+  static async Test(next: NextFunction, flag: TokenFlag) {
+    try {
+      const test = new Promise((resolve) => {
+        resolve({ aim: 'testing', flag })
+      })
+      const r = await test;
+      console.log('testing', r);
+      
+    } catch (error: any) {
+      console.log('next error ', error)
+      next(error)
+    }
+    // return next()
   }
 
   static async checkIfUserIsAuthenticated(req: SessionRequest) {

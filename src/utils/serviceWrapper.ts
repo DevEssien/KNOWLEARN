@@ -15,11 +15,11 @@ export interface IServiceActionResult {
 type HandlerFn = (( req: Request ) => Promise<IServiceActionResult>) | (() => Promise<IServiceActionResult>);
 
 export  function wrapHandler(handler: HandlerFn): RequestHandler {
-  return async function(req: Request, res: Response, next: NextFunction ) {
+  return async function(req: Request | any, res: Response, next: NextFunction ) {
     try {
-      const { token = null, data  = null, statusCode = 200, message = 'The request was successful' } = await handler(req);
+      const { data  = null, statusCode = 200, message = 'The request was successful' } = await handler(req);
+      const token = req.session.token ?? null
 
-      // console.log('wrapper success next:: ', next.toString())
       return res.status(200).json({
         status: 'success',
         statusCode,
@@ -28,8 +28,6 @@ export  function wrapHandler(handler: HandlerFn): RequestHandler {
         token
       });
     } catch (error: any) {
-      // console.log('wrapper error next:: ', next)
-      // console.log('wrapper error:: ', error)
       return next(error);
     }
   }

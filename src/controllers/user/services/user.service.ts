@@ -16,7 +16,7 @@ export default class  UserService {
     const users = await User.getAllUser();
 
     if (users.length  === 0) throw new NotFoundException(ErrorMessages.NO_FOUND_USER);
-
+    
     return  {
       message: 'Fetched All Users successfully',
       data: { users },
