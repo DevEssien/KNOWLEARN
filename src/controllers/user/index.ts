@@ -4,50 +4,36 @@ import { Request, Response,
 import { wrapHandler } from '../../utils/serviceWrapper';
 import UserService from "./services/user.service";
 import { authMiddleware, Controller, Get, Put, Delete } from '../../core/decorators';
-// import { authMiddleware } from '../../core/decorators';
-// import { SessionRequest } from "../../dto/app";
-// import  Auth from '../../middleware/auth';
 import { TokenFlag } from "../../dto/app";
  
-@Controller('/users')
+@Controller({ 
+    basePath: '/users' 
+})
 export default class UserController {
     @Get()
     @authMiddleware(TokenFlag.AUTH)
-    public static getAllUser(req: Request, res: Response, next: NextFunction){
-        console.log('here in controller')
+    public static async getAllUser(req: Request, res: Response, next: NextFunction){
         return wrapHandler(() => {
-            console.log('here in controller wrapper ')
             return UserService.getAllUser()
         })(req, res, next);
     } 
 
     @Get('/:userId')
+    @authMiddleware(TokenFlag.AUTH)
     public static getUserById(req: Request, res: Response, next: NextFunction) {
-        console.log('here in controller')
         return wrapHandler((req) => {
-            console.log('here in controller wrapper ')
             return UserService.getUserById({ _id: req.params?.userId});
         })(req, res, next);
     }
 
-    // @authMiddleware(TokenFlag.AUTH) //this is the issue
+    @authMiddleware(TokenFlag.AUTH) 
     @Put('/:userId')
     public static updateUser(req: Request, res: Response, next: NextFunction) {
-        // console.log('controller next:: ', next)
         return wrapHandler((req: Request) => {
            const _id = req.params?.userId
            return UserService.updateUser( { _id }, { ...req.body } );
        })(req, res, next);
     }
-
-    // @authMiddleware(TokenFlag.AUTH) //this is the issue
-    // public static updateUser = wrapHandler((request: Request,) => {
-    //         console.log('here in controller')
-    //        const req = request;
-    //        const _id = request.params?.userId
-    //        return UserService.updateUser( { _id }, { ...req.body } );
-    // });
-
     
     
     // @authMiddleware(TokenFlag.AUTH)

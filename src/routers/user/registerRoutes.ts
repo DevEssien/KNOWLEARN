@@ -17,6 +17,7 @@ const registerControllerRoutes = (router: Router, controller: any) => {
     switch (method) {
       case 'get':
         router.get(fullPath, (req: Request, res: Response, next: NextFunction) => {
+          console.log('role ', req.body?.role)
           controller[handlerName](req, res, next);
         });
         break;
