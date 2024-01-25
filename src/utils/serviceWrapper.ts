@@ -23,14 +23,15 @@ export function wrapHandler(handler: HandlerFn): RequestHandler {
 				statusCode = 200,
 				message = "The request was successful",
 			} = await handler(req);
-			// const token = req.session.token ?? null;
+
+			const retrievedToken = req.session ? req.session.token : token;
 
 			return res.status(200).json({
 				status: "success",
 				statusCode,
 				message,
 				data,
-				token,
+				token: retrievedToken,
 			});
 		} catch (error: any) {
 			return next(error);

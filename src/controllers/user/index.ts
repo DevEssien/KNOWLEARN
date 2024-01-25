@@ -9,7 +9,7 @@ import { TokenFlag } from "../../dto/app";
 })
 export default class UserController {
 	@Get()
-	// @authMiddleware(TokenFlag.AUTH)
+	@authMiddleware(TokenFlag.AUTH)
 	public static async getAllUser(req: Request, res: Response, next: NextFunction) {
 		return wrapHandler(() => {
 			return UserService.getAllUser();
@@ -20,7 +20,9 @@ export default class UserController {
 	@authMiddleware(TokenFlag.AUTH)
 	public static getUserById(req: Request, res: Response, next: NextFunction) {
 		return wrapHandler((req) => {
-			return UserService.getUserById({ _id: req.params?.userId });
+			type reqParamsKeyType = keyof typeof req.params;
+			const _id = req.params?.userId;
+			return UserService.getUserById({ _id: _id as reqParamsKeyType as string });
 		})(req, res, next);
 	}
 
@@ -28,8 +30,9 @@ export default class UserController {
 	@Put("/:userId")
 	public static updateUser(req: Request, res: Response, next: NextFunction) {
 		return wrapHandler((req: Request) => {
+			type reqParamsKeyType = keyof typeof req.params;
 			const _id = req.params?.userId;
-			return UserService.updateUser({ _id }, { ...req.body });
+			return UserService.updateUser({ _id: _id as reqParamsKeyType as string }, { ...req.body });
 		})(req, res, next);
 	}
 
@@ -60,8 +63,9 @@ export default class UserController {
 	@Delete("/userId")
 	public static deleteOneUser(req: Request, res: Response, next: NextFunction) {
 		return wrapHandler((req: Request) => {
+			type reqParamsKeyType = keyof typeof req.params;
 			const _id = req.params?.userId;
-			return UserService.deleteUserById({ _id });
+			return UserService.deleteUserById({ _id: _id as reqParamsKeyType as string });
 		})(req, res, next);
 	}
 }
