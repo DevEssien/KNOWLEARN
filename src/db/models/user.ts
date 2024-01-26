@@ -1,4 +1,4 @@
-import { Document, Schema, model } from "mongoose";
+import { Document, Types, Schema, model } from "mongoose";
 import { IGeneric } from "./generics/index";
 import { OTPStatus, UserRole } from "../enums/index";
 
@@ -14,8 +14,8 @@ export interface IUser extends IGeneric {
 	image_url: string;
 	image_id: string;
 	role: UserRole;
-	// courses_enrolled_ids: Types.ObjectId[]; // integer[]  [ref: > Course.id]
-	// modules_completed_ids: Types.ObjectId[]; //integer[] [ref: > Module.id]
+	courses_enrolled_ids: Types.ObjectId[]; // integer[]  [ref: > Course.id]
+	modules_completed_ids: Types.ObjectId[]; //integer[] [ref: > Module.id]
 	otp: string;
 	otp_status: OTPStatus;
 	otp_expiration_date: Date;
@@ -49,14 +49,18 @@ const UserSchema = new Schema<IUser>(
 			enum: Object.values(UserRole),
 			default: UserRole.STUDENT,
 		},
-		// courses_enrolled_ids: {
-		// 	type: [Number],
-		// 	ref: "Course",
-		// },
-		// modules_completed_ids: {
-		// 	type: [Number],
-		// 	ref: "Module",
-		// },
+		courses_enrolled_ids: [
+			{
+				type: Types.ObjectId,
+				ref: "Course",
+			},
+		],
+		modules_completed_ids: [
+			{
+				type: Types.ObjectId,
+				ref: "Module",
+			},
+		],
 		otp: { type: String },
 		otp_status: {
 			type: String,

@@ -1,39 +1,41 @@
 API Endpoints:
-User Management:
 
+User Management:
 /api/users/register: Register a new user.
 /api/users/login: User login to obtain authentication token.
 /api/users/enroll/:courseId: Enroll in a course.
-Course Management:
 
+Course Management:
 /api/courses/create: Create a new course.
 /api/courses/edit/:courseId: Edit an existing course.
 /api/courses/delete/:courseId: Delete a course.
 /api/courses/enroll/:courseId: Enroll in a course.
-Quiz Management:
 
+Quiz Management:
 /api/quizzes/create/:courseId: Create a quiz for a specific course.
 /api/quizzes/complete/:quizId: Submit answers for a quiz.
 /api/quizzes/scores/:quizId: Get scores for a completed quiz.
-Content Delivery:
 
+Content Delivery:
 /api/courses/content/:courseId: Get course content (videos, text, quizzes).
 /api/courses/modules/:courseId: Get course modules.
+
 User Dashboard:
-
 /api/users/dashboard: Get user's enrolled courses, upcoming assessments, and progress.
-Payment Integration (Optional):
 
+Payment Integration (Optional):
 /api/payments/subscribe/:courseId: Subscribe to a premium course.
 /api/payments/cancelSubscription/:courseId: Cancel subscription.
-Search and Recommendation:
 
+Search and Recommendation:
 /api/courses/search?q=keyword: Search for courses based on keywords.
 /api/courses/recommendations: Get recommended courses based on user preferences.
-Notification System:
 
+Notification System:
 /api/notifications/:userId: Get notifications for a user.
 /api/notifications/settings/:userId: Update notification preferences.
+
+
 Core Entities (Classes):
 User Class:
 
@@ -51,12 +53,14 @@ Notification Class:
 
 Properties: id, type, content, userId, isRead.
 Methods: sendNotification, markAsRead.
+
+
 Services:
+
 AuthService:
-
 Methods: registerUser, loginUser, verifyToken.
-CourseService:
 
+CourseService:
 Methods: createCourse, editCourse, deleteCourse, enrollUser.
 QuizService:
 
