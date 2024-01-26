@@ -1,14 +1,18 @@
-import UserService, { User} from '../../user/services/user.service';
-import { CreatedUserValidator } from '../../user/validators/index';
-import checkSignupInfo from '../../user/validators/userSignupInfoCheck';
-import { ResourceConflictException, ServiceException, ValidationException } from  '../../../libs/exceptions/index';
-import { ErrorMessages } from  '../../../libs/exceptions/messages';
-import { bcryptHash, generateJWT } from '../../../utils/index';
-import { TokenFlag } from '../../../dto/app';
-import { IServiceActionResult } from '../../../utils/serviceWrapper';
-import { OTPStatus } from '../../../db/enums/index';
-import OTPValidator from '../../../utils/otpValidator';
-import Mail from '../../../libs/mailer/index'
+import UserService, { User } from "../../user/services/user.service";
+import { CreatedUserValidator } from "../../user/validators/index";
+import checkSignupInfo from "../../user/validators/userSignupInfoCheck";
+import {
+	ResourceConflictException,
+	ServiceException,
+	ValidationException,
+} from "../../../libs/exceptions/index";
+import { ErrorMessages } from "../../../libs/exceptions/messages";
+import { bcryptHash, generateJWT } from "../../../utils/index";
+import { TokenFlag } from "../../../dto/app";
+import { IServiceActionResult } from "../../../utils/serviceWrapper";
+import { OTPStatus } from "../../../db/enums/index";
+import OTPValidator from "../../../utils/otpValidator";
+// import Mail from "../../../libs/mailer/index";
 
 /**
  * On signup:
@@ -22,66 +26,63 @@ import Mail from '../../../libs/mailer/index'
  * - Send welcome email
  **/
 
-const otpValidator = new OTPValidator(20)
+const otpValidator = new OTPValidator(20);
 
-async function signup( signupFields: CreatedUserValidator ) {
-  const { email, password, role } = signupFields;
+async function signup(signupFields: CreatedUserValidator) {
+	const { email, password, role } = signupFields;
 
-  const errors = await checkSignupInfo(signupFields);
+	const errors = await checkSignupInfo(signupFields);
 
-  if (errors.length > 0) throw new ValidationException(ErrorMessages.INVALID_INPUT, errors);
+	if (errors.length > 0) throw new ValidationException(ErrorMessages.INVALID_INPUT, errors);
 
-  let user = await User.getUserByEmail(email);
-  if (user) throw new ResourceConflictException(ErrorMessages.ACCOUNT_EXIST);
+	let user = await User.getUserByEmail(email);
+	if (user) throw new ResourceConflictException(ErrorMessages.ACCOUNT_EXIST);
 
-  const hashedPassword = await bcryptHash(<string>password);
+	const hashedPassword = await bcryptHash(<string>password);
 
-  if (!role) throw new ServiceException('Role does not exist');
+	if (!role) throw new ServiceException("Role does not exist");
 
-  const otp = await otpValidator.generateOTP(6);
+	const otp = await otpValidator.generateOTP(6);
 
-  //set otp expiration time to 20mins top
-  const otpExpDate = otpValidator.generateOTPExpirationDate()
-  
-  //send welcome mail;
-  const mailResult = await Mail.send({
-    email: email,
-    templateContent: `<h1>Welcome to Knowlearn.</h1><br> Your otp code is ${otp}`,
-    subject: 'Knowlearn -otp code'
-  });
+	//set otp expiration time to 20mins top
+	const otpExpDate = otpValidator.generateOTPExpirationDate();
 
-  if (mailResult.response.status !== 200) throw new ServiceException('An error occured due to poor network');
- 
+	//send welcome mail;
+	// const mailResult = await Mail.send({
+	//   email: email,
+	//   templateContent: `<h1>Welcome to Knowlearn.</h1><br> Your otp code is ${otp}`,
+	//   subject: 'Knowlearn -otp code'
+	// });
 
-  user = await UserService.createUser({ 
-    ...signupFields, 
-    password: hashedPassword,
-    otp: +otp,
-    otp_status: OTPStatus.PENDING,
-    otp_expiration_date: otpExpDate
-  });
-  
-  const token = await generateJWT({ 
-    userId:  user.id,
-    flag: TokenFlag.AUTH,
-    timestamp: Date.now(),
-  });
+	// if (mailResult.response.status !== 200) throw new ServiceException('An error occured due to poor network');
 
-  
-  
-  let responseData: IServiceActionResult;
+	user = await UserService.createUser({
+		...signupFields,
+		password: hashedPassword,
+		otp: +otp,
+		otp_status: OTPStatus.PENDING,
+		otp_expiration_date: otpExpDate,
+	});
 
-  responseData = {
-    statusCode: 201,
-    message: 'User created with otp sent',
-    data: { createdUser: { ...user._doc, password: 'hidden' }},
-    token: {
-      flag: TokenFlag.AUTH,
-      value: token
-    }
-  }
+	const token = await generateJWT({
+		userId: user.id,
+		flag: TokenFlag.AUTH,
+		timestamp: Date.now(),
+	});
 
-  return responseData;
+	let responseData: IServiceActionResult;
+
+	responseData = {
+		statusCode: 201,
+		message: "User created with otp sent",
+		data: { createdUser: { ...user._doc, password: "hidden" } },
+		token: {
+			flag: TokenFlag.AUTH,
+			value: token,
+		},
+	};
+
+	return responseData;
 }
 
 export default signup;
