@@ -1,106 +1,115 @@
-import 'reflect-metadata';
-import { IDValidator, GenericValidator } from '../validators/index';
-import UserRepo, {ICreateUser} from '../../../db/repositories/user.repo';
-import UserModel, { IUser} from '../../../db/models/User';
-import { NotFoundException, ValidationException, ResourceConflictException, InternalServerException } from '../../../libs/exceptions/index';
-import { ErrorMessages } from '../../../libs/exceptions/messages';
-import { Validate } from '../../../utils/index';
+import "reflect-metadata";
+import { IDValidator, GenericValidator } from "../validators/index";
+import UserRepo, { ICreateUser } from "../../../db/repositories/user.repo";
+import UserModel, { IUser } from "../../../db/models/user";
+import {
+	NotFoundException,
+	ValidationException,
+	ResourceConflictException,
+	InternalServerException,
+} from "../../../libs/exceptions/index";
+import { ErrorMessages } from "../../../libs/exceptions/messages";
+import { Validate } from "../../../utils/index";
 // import { SessionRequest } from '../../../dto/app';
 // import { TokenFlag } from '../../../dto/app';
 // import { Middleware } from '../../../core/decorators';
 
 export const User = new UserRepo(UserModel);
 
-export default class  UserService {
-  public static async getAllUser() {
-    const users = await User.getAllUser();
+export default class UserService {
+	public static async getAllUser() {
+		const users = await User.getAllUser();
 
-    if (users.length  === 0) throw new NotFoundException(ErrorMessages.NO_FOUND_USER);
-    
-    return  {
-      message: 'Fetched All Users successfully',
-      data: { users },
-    };
-  }
+		if (users.length === 0) throw new NotFoundException(ErrorMessages.NO_FOUND_USER);
 
-  public static async getUserById(idDto: IDValidator) {
-    const idValidatableField = new IDValidator(idDto._id);
-    const errors = await Validate(idValidatableField);
-    
-    if (errors.length > 0) throw new ValidationException(ErrorMessages.INVALID_ID, errors);
+		return {
+			message: "Fetched All Users successfully",
+			data: { users },
+		};
+	}
 
-    const user = await User.getUserById(idValidatableField._id);
-    if (!user) throw new NotFoundException(ErrorMessages.NO_FOUND_USER);
-  
-    return {
-      message: 'Fetched user with id successfully',
-      data: { user }
-    }
-  }
+	public static async getUserById(idDto: IDValidator) {
+		const idValidatableField = new IDValidator(idDto._id);
+		const errors = await Validate(idValidatableField);
 
-  public static async getUserByEmail(emailDto: GenericValidator): Promise<IUser> {
-    const emailValidatableField = new GenericValidator(emailDto.email);
-    const errors = await Validate(emailValidatableField);
-    
-    if (errors.length > 0) throw new ValidationException(ErrorMessages.INVALID_EMAIL, errors);
+		if (errors.length > 0) throw new ValidationException(ErrorMessages.INVALID_ID, errors);
 
-    const user = await User.getUserByEmail(emailValidatableField.email);
-    if (!user) throw new NotFoundException(ErrorMessages.NO_FOUND_USER);
+		const user = await User.getUserById(idValidatableField._id);
+		if (!user) throw new NotFoundException(ErrorMessages.NO_FOUND_USER);
 
-    return user;
-  }
-  
-  public static async createUser(createUserDto: { confirmPassword: string, fullName: string } & Partial<Record<keyof IUser, any>>) {
-    // const { email, fullName, password, confirmPassword, role, } = createUserDto;
-    
-    // const userValidatableFields = new CreatedUserValidator(email, password, confirmPassword, fullName, role, rawPassword);
-    // const errors = await Validate(userValidatableFields);
+		return {
+			message: "Fetched user with id successfully",
+			data: { user },
+		};
+	}
 
-    // if (errors.length > 0) throw new ValidationException(ErrorMessages.INVALID_INPUT, errors);
+	public static async getUserByEmail(emailDto: GenericValidator): Promise<IUser> {
+		const emailValidatableField = new GenericValidator(emailDto.email);
+		const errors = await Validate(emailValidatableField);
 
-    const user = await User.getUserByEmail(createUserDto?.email);
-    if (user) throw new ResourceConflictException(ErrorMessages.EMAIL_EXIST);
+		if (errors.length > 0) throw new ValidationException(ErrorMessages.INVALID_EMAIL, errors);
 
-    const newUser = User.createUser({ ...<ICreateUser>createUserDto }, );
-    if (!newUser) throw new InternalServerException('Unable To Create User!');
+		const user = await User.getUserByEmail(emailValidatableField.email);
+		if (!user) throw new NotFoundException(ErrorMessages.NO_FOUND_USER);
 
-    return newUser;
-  }
+		return user;
+	}
 
-  // @Middleware([TokenFlag.AUTH])
-  public static async updateUser(filter: IDValidator, updateUserDto: Partial<IUser>) {
-    const idValidatableField = new IDValidator(filter._id);
-    const errors = await Validate(idValidatableField);
-  
-    if (errors.length > 0) throw new ValidationException(ErrorMessages.INVALID_INPUT, errors);
-  
-    const updatedUser = await User.updateUser(filter, updateUserDto);
-    if (!updatedUser) throw new InternalServerException('Unable To Update User!');
+	public static async createUser(
+		createUserDto: { confirmPassword: string; fullName: string } & Partial<Record<keyof IUser, any>>
+	) {
+		// const { email, fullName, password, confirmPassword, role, } = createUserDto;
 
-    if (updatedUser.modifiedCount !== 1) throw new NotFoundException(`Expected 1 document to be modified, but found ${updatedUser.modifiedCount}`);
+		// const userValidatableFields = new CreatedUserValidator(email, password, confirmPassword, fullName, role, rawPassword);
+		// const errors = await Validate(userValidatableFields);
 
-    return {
-      message: 'Updated User Successfully',
-      data: {...updatedUser, updatedUser: await User.getUserById(filter._id) }
-    }
-  }
+		// if (errors.length > 0) throw new ValidationException(ErrorMessages.INVALID_INPUT, errors);
 
-  
-  public static async deleteUserById(filter: IDValidator) {
-    const idValidatableField = new IDValidator(filter._id);
-    const errors = await Validate(idValidatableField);
-  
-    if (errors.length > 0) throw new ValidationException(ErrorMessages.INVALID_INPUT, errors);
+		const user = await User.getUserByEmail(createUserDto?.email);
+		if (user) throw new ResourceConflictException(ErrorMessages.EMAIL_EXIST);
 
-    const deletedUser  = await User.deleteUserById(filter);
-    
-    if (!deletedUser) throw new InternalServerException('Unable To Delete User');
+		const newUser = User.createUser({ ...(<ICreateUser>createUserDto) });
+		if (!newUser) throw new InternalServerException("Unable To Create User!");
 
-    if (deletedUser?.deletedCount === 0) throw new NotFoundException('User with ID Already Deleted')
+		return newUser;
+	}
 
-    return {
-      message: 'Deleted User Successfully',
-      data: { ...deletedUser, removedId: filter._id }
-    }
-  }
+	// @Middleware([TokenFlag.AUTH])
+	public static async updateUser(filter: IDValidator, updateUserDto: Partial<IUser>) {
+		const idValidatableField = new IDValidator(filter._id);
+		const errors = await Validate(idValidatableField);
+
+		if (errors.length > 0) throw new ValidationException(ErrorMessages.INVALID_INPUT, errors);
+
+		const updatedUser = await User.updateUser(filter, updateUserDto);
+		if (!updatedUser) throw new InternalServerException("Unable To Update User!");
+
+		if (updatedUser.modifiedCount !== 1)
+			throw new NotFoundException(
+				`Expected 1 document to be modified, but found ${updatedUser.modifiedCount}`
+			);
+
+		return {
+			message: "Updated User Successfully",
+			data: { ...updatedUser, updatedUser: await User.getUserById(filter._id) },
+		};
+	}
+
+	public static async deleteUserById(filter: IDValidator) {
+		const idValidatableField = new IDValidator(filter._id);
+		const errors = await Validate(idValidatableField);
+
+		if (errors.length > 0) throw new ValidationException(ErrorMessages.INVALID_INPUT, errors);
+
+		const deletedUser = await User.deleteUserById(filter);
+
+		if (!deletedUser) throw new InternalServerException("Unable To Delete User");
+
+		if (deletedUser?.deletedCount === 0) throw new NotFoundException("User with ID Already Deleted");
+
+		return {
+			message: "Deleted User Successfully",
+			data: { ...deletedUser, removedId: filter._id },
+		};
+	}
 }

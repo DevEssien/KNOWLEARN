@@ -1,8 +1,8 @@
-import { Types } from 'mongoose';
+import { Types } from "mongoose";
 
-export interface IGeneric {
-    _id: Types.ObjectId;
-    id: string;
-    createdAt: Date;
-    updatedAt: Date;
+export default interface IGeneric {
+	_id: Types.ObjectId;
+	id: string;
+	createdAt: Date;
+	updatedAt: Date;
 }

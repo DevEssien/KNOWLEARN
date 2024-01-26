@@ -1,5 +1,5 @@
 import { Document, Types, Schema, model } from "mongoose";
-import { IGeneric } from "./generics/index";
+import IGeneric from "./generics/index";
 import { OTPStatus, UserRole } from "../enums/index";
 
 export interface IUser extends IGeneric {
