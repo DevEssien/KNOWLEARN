@@ -1,24 +1,19 @@
 import { Schema, Types, Document, model } from "mongoose";
-import IGeneric from "./generics";
 
-export interface ICourseCategory extends IGeneric {
-	name: string;
-	description: string;
-	courses: Types.ObjectId[]; // [ref: > Course.id]
+export interface ICourseCategory {
+	course_id: Types.ObjectId; // [ref: > Course.id]
+	category_id: Types.ObjectId; // [//ref: > Category.id]
+	createdAt: Date;
+	updatedAt: Date;
+	//   primary key(course_id, category_id)
 }
 
 export type ICourseCategoryDoc = ICourseCategory & Document<ICourseCategory>;
 
 const CourseCategorySchema = new Schema<ICourseCategory>(
 	{
-		name: { type: String },
-		description: { type: String },
-		courses: [
-			{
-				type: Types.ObjectId,
-				ref: "Course",
-			},
-		],
+		course_id: { type: Types.ObjectId },
+		category_id: { type: Types.ObjectId },
 	},
 	{ timestamps: true }
 );

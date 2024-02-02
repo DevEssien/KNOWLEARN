@@ -2,7 +2,7 @@ import { Schema, Document, Types, model } from "mongoose";
 import IGeneric from "./generics/index";
 import { CourseContentType, CourseLevel, CourseType } from "../enums/index";
 
-interface ICourse extends IGeneric {
+export interface ICourse extends IGeneric {
 	title: string;
 	content_type: CourseContentType;
 	description: string;
@@ -60,7 +60,7 @@ const CourseSchema = new Schema<ICourse>(
 		instructor_id: [
 			{
 				type: String,
-				ref: "Instructor",
+				ref: "User",
 			},
 		],
 		category_id: [

@@ -3,6 +3,8 @@ import { wrapHandler } from "../../utils/serviceWrapper";
 import UserService from "./services/user.service";
 import { authMiddleware, Controller, Get, Put, Delete } from "../../core/decorators";
 import { TokenFlag } from "../../dto/app";
+// import { ServiceException } from "../../libs/exceptions/index";
+// import { ErrorMessages } from "../../libs/exceptions/messages";
 
 @Controller({
 	basePath: "/users",
@@ -32,6 +34,7 @@ export default class UserController {
 		return wrapHandler((req: Request) => {
 			type reqParamsKeyType = keyof typeof req.params;
 			const _id = req.params?.userId;
+			// if (!_id) return new ServiceException(ErrorMessages.INVALID_ID);
 			return UserService.updateUser({ _id: _id as reqParamsKeyType as string }, { ...req.body });
 		})(req, res, next);
 	}
