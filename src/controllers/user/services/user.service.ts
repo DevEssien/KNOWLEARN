@@ -10,9 +10,6 @@ import {
 } from "../../../libs/exceptions/index";
 import { ErrorMessages } from "../../../libs/exceptions/messages";
 import { Validate } from "../../../utils/index";
-// import { SessionRequest } from '../../../dto/app';
-// import { TokenFlag } from '../../../dto/app';
-// import { Middleware } from '../../../core/decorators';
 
 export const User = new UserRepo(UserModel);
 

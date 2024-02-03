@@ -5,6 +5,7 @@ import { CourseContentType, CourseLevel, CourseType } from "../enums/index";
 export interface ICourse extends IGeneric {
 	title: string;
 	content_type: CourseContentType;
+	content: string;
 	description: string;
 	course_type: CourseType;
 	level: CourseLevel;
@@ -29,6 +30,7 @@ const CourseSchema = new Schema<ICourse>(
 			enum: Object.values(CourseContentType),
 			default: CourseContentType.DOCUMENT,
 		},
+		content: { type: String },
 		description: { type: String },
 		course_type: {
 			type: String,
@@ -57,18 +59,15 @@ const CourseSchema = new Schema<ICourse>(
 				ref: "User",
 			},
 		],
-		instructor_id: [
-			{
-				type: String,
-				ref: "User",
-			},
-		],
-		category_id: [
-			{
-				type: String,
-				ref: "Category",
-			},
-		],
+		instructor_id: {
+			type: String,
+			ref: "User",
+		},
+
+		category_id: {
+			type: String,
+			ref: "Category",
+		},
 	},
 	{
 		timestamps: true,
