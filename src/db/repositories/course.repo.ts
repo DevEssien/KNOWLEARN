@@ -1,4 +1,4 @@
-import { Model, FilterQuery, isValidObjectId } from "mongoose";
+import { Model, FilterQuery, isValidObjectId, Types } from "mongoose";
 import { ICourse } from "../models/course";
 import { ServiceException } from "../../libs/exceptions/index";
 import { ErrorMessages } from "../../libs/exceptions/messages";
@@ -15,6 +15,15 @@ export default class CousseRepo {
 		return this.courseModel.findById(_id);
 	}
 
+	async getAllCourseByInstuctorId(instructor_id: Types.ObjectId) {
+		if (!isValidObjectId(instructor_id)) throw new ServiceException(ErrorMessages.INVALID_OBJECT_ID);
+		return this.courseModel.find({ instructor_id: instructor_id });
+	}
+
+	async getAllCourseByField(filter: FilterQuery<ICourse>) {
+		return this.courseModel.find(filter);
+	}
+
 	async createCourse(courseDetails: Partial<ICourse>) {
 		const newCourse = new this.courseModel(courseDetails);
 		return newCourse.save();
@@ -24,7 +33,8 @@ export default class CousseRepo {
 		return this.courseModel.updateOne(filter, course);
 	}
 
-	async deleteCourseById(filter: FilterQuery<ICourse>) {
-		return this.courseModel.deleteOne(filter);
+	async deleteCourseById(_id: Types.ObjectId) {
+		if (!isValidObjectId(_id)) throw new ServiceException(ErrorMessages.INVALID_OBJECT_ID);
+		return this.courseModel.deleteOne(_id);
 	}
 }
