@@ -9,7 +9,7 @@ export interface ICourse extends IGeneric {
 	description: string;
 	course_type: CourseType;
 	level: CourseLevel;
-	price: number;
+	price: string;
 	enrollment_key: string;
 	start_date: Date;
 	end_date: Date;
@@ -42,7 +42,7 @@ const CourseSchema = new Schema<ICourse>(
 			enum: Object.values(CourseLevel),
 			default: CourseLevel.EASY,
 		},
-		price: { type: Number },
+		price: { type: String },
 		enrollment_key: { type: String },
 		start_date: { type: Date },
 		end_date: { type: Date },
