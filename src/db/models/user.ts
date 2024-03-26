@@ -1,6 +1,7 @@
 import { Document, Types, Schema, model } from "mongoose";
-import { IGeneric } from "./generics/index";
+import IGeneric from "./generics/index";
 import { OTPStatus, UserRole } from "../enums/index";
+import { bcryptHash } from "../../utils/index";
 
 export interface IUser extends IGeneric {
 	first_name: string;
@@ -73,6 +74,15 @@ const UserSchema = new Schema<IUser>(
 	},
 	options
 );
+
+UserSchema.pre("save", async function (next: Function) {
+	if (!this.isModified("password")) return next();
+
+	const hashedPassword = await bcryptHash(this.password);
+	this.password = hashedPassword;
+
+	next();
+});
 
 UserSchema.virtual("fullName").set(function (value: String) {
 	const lastSpaceIndex = value.lastIndexOf(" ");

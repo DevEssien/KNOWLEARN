@@ -1,0 +1,5 @@
+# authentication feature
+password reset
+- password history: prevent users from using previously compromised password by 
+implementing a password history feature that remembers a certain number of past 
+passwords and disallows their reuse.
